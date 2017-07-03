@@ -15,8 +15,12 @@ class IcaaFile
 
     }
 
-    public function dump($input)
+    /**
+     * @param \NumaxLab\Icaa\Dumper $dumper
+     * @return string
+     */
+    public function dump(Dumper $dumper)
     {
-
+        return $dumper->dump();
     }
 }
