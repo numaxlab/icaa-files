@@ -25,7 +25,7 @@ class CinemaTheatreTest extends TestCase
     {
         parent::tearDown();
 
-        $this->sut = NULL;
+        $this->sut = null;
     }
 
     public function testImplementsRecordInterface()

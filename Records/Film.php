@@ -2,6 +2,8 @@
 
 namespace NumaxLab\Icaa\Records;
 
+use NumaxLab\Icaa\Exceptions\MissingPropertyException;
+
 class Film implements RecordInterface
 {
     const RECORD_TYPE = 4;
@@ -245,17 +247,73 @@ class Film implements RecordInterface
     }
 
     /**
+     * @throws \NumaxLab\Icaa\Exceptions\MissingPropertyException
+     */
+    private function checkProperties()
+    {
+        $throwException = false;
+        $missingProperty = '';
+
+        if (is_null($this->getCinemaTheatreCode())) {
+            $throwException = true;
+            $missingProperty = 'cinemaTheatreCode';
+        }
+        if (! $throwException && is_null($this->getId())) {
+            $throwException = true;
+            $missingProperty = 'id';
+        }
+        if (! $throwException && is_null($this->getClassificationRecordCode())) {
+            $throwException = true;
+            $missingProperty = 'classificationRecordCode';
+        }
+        if (! $throwException && is_null($this->getTitle())) {
+            $throwException = true;
+            $missingProperty = 'title';
+        }
+        if (! $throwException && is_null($this->getDistributorCode())) {
+            $throwException = true;
+            $missingProperty = 'distributorCode';
+        }
+        if (! $throwException && is_null($this->getDistributorName())) {
+            $throwException = true;
+            $missingProperty = 'distributorName';
+        }
+        if (! $throwException && is_null($this->getOriginalVersionCode())) {
+            $throwException = true;
+            $missingProperty = 'originalVersionCode';
+        }
+        if (! $throwException && is_null($this->getLangVersionCode())) {
+            $throwException = true;
+            $missingProperty = 'langVersionCode';
+        }
+        if (! $throwException && is_null($this->getCaptionsLangCode())) {
+            $throwException = true;
+            $missingProperty = 'captionsLangCode';
+        }
+        if (! $throwException && is_null($this->getProjectionFormat())) {
+            $throwException = true;
+            $missingProperty = 'projectionFormat';
+        }
+
+        if ($throwException) {
+            throw new MissingPropertyException(sprintf("Missing property %s", $missingProperty));
+        }
+    }
+
+    /**
      * @return string
      */
     public function toLine()
     {
+        $this->checkProperties();
+
         $line = (string) self::RECORD_TYPE;
         $line .= str_pad($this->getCinemaTheatreCode(), 12, ' ');
         $line .= str_pad($this->getId(), 5, '0', STR_PAD_LEFT);
         $line .= str_pad($this->getClassificationRecordCode(), 12, ' ');
-        $line .= str_pad($this->getTitle(), 50, ' ');
+        $line .= str_pad(substr($this->getTitle(), 0, 50), 50, ' ');
         $line .= str_pad($this->getDistributorCode(), 12, ' ');
-        $line .= str_pad($this->getDistributorName(), 50, ' ');
+        $line .= str_pad(substr($this->getDistributorName(), 0, 50), 50, ' ');
         $line .= $this->getOriginalVersionCode();
         $line .= $this->getLangVersionCode();
         $line .= $this->getCaptionsLangCode();

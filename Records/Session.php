@@ -2,6 +2,9 @@
 
 namespace NumaxLab\Icaa\Records;
 
+use Carbon\Carbon;
+use NumaxLab\Icaa\Exceptions\MissingPropertyException;
+
 class Session implements RecordInterface
 {
     const RECORD_TYPE = 2;
@@ -58,7 +61,7 @@ class Session implements RecordInterface
      * @param \Carbon\Carbon $datetime
      * @return Session
      */
-    public function setDatetime($datetime)
+    public function setDatetime(Carbon $datetime)
     {
         $this->datetime = $datetime;
         return $this;
@@ -153,10 +156,50 @@ class Session implements RecordInterface
     }
 
     /**
+     * @throws \NumaxLab\Icaa\Exceptions\MissingPropertyException
+     */
+    private function checkProperties()
+    {
+        $throwException = false;
+        $missingProperty = '';
+
+        if (is_null($this->getCinemaTheatreCode())) {
+            $throwException = true;
+            $missingProperty = 'cinemaTheatreCode';
+        }
+        if (! $throwException && is_null($this->getDatetime())) {
+            $throwException = true;
+            $missingProperty = 'datetime';
+        }
+        if (! $throwException && is_null($this->getFilmsQty())) {
+            $throwException = true;
+            $missingProperty = 'filmsQty';
+        }
+        if (! $throwException && is_null($this->getTicketsQty())) {
+            $throwException = true;
+            $missingProperty = 'ticketsQty';
+        }
+        if (! $throwException && is_null($this->getEarnings())) {
+            $throwException = true;
+            $missingProperty = 'earnings';
+        }
+        if (! $throwException && is_null($this->getIncidentCode())) {
+            $throwException = true;
+            $missingProperty = 'incidentCode';
+        }
+
+        if ($throwException) {
+            throw new MissingPropertyException(sprintf("Missing property %s", $missingProperty));
+        }
+    }
+
+    /**
      * @return string
      */
     public function toLine()
     {
+        $this->checkProperties();
+
         $line = (string) self::RECORD_TYPE;
         $line .= str_pad($this->getCinemaTheatreCode(), 12, ' ');
         $line .= $this->getDatetime()->format('dmy');

@@ -3,6 +3,8 @@
 namespace NumaxLab\Icaa\Records;
 
 
+use NumaxLab\Icaa\Exceptions\MissingPropertyException;
+
 class SessionFilm implements RecordInterface
 {
     const RECORD_TYPE = 3;
@@ -85,10 +87,38 @@ class SessionFilm implements RecordInterface
     }
 
     /**
+     * @throws \NumaxLab\Icaa\Exceptions\MissingPropertyException
+     */
+    private function checkProperties()
+    {
+        $throwException = false;
+        $missingProperty = '';
+
+        if (is_null($this->getCinemaTheatreCode())) {
+            $throwException = true;
+            $missingProperty = 'cinemaTheatreCode';
+        }
+        if (! $throwException && is_null($this->getSessionDatetime())) {
+            $throwException = true;
+            $missingProperty = 'sessionDatetime';
+        }
+        if (! $throwException && is_null($this->getFilmId())) {
+            $throwException = true;
+            $missingProperty = 'filmId';
+        }
+
+        if ($throwException) {
+            throw new MissingPropertyException(sprintf("Missing property %s", $missingProperty));
+        }
+    }
+
+    /**
      * @return string
      */
     public function toLine()
     {
+        $this->checkProperties();
+
         $line = (string) self::RECORD_TYPE;
         $line .= str_pad($this->getCinemaTheatreCode(), 12, ' ');
         $line .= $this->getSessionDatetime()->format('dmy');

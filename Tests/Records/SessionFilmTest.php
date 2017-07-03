@@ -3,16 +3,15 @@
 namespace NumaxLab\Icaa\Tests\Records;
 
 use Carbon\Carbon;
-use NumaxLab\Icaa\Exceptions\InvalidFormatException;
 use NumaxLab\Icaa\Exceptions\MissingPropertyException;
-use NumaxLab\Icaa\Records\Box;
 use NumaxLab\Icaa\Records\RecordInterface;
+use NumaxLab\Icaa\Records\SessionFilm;
 use PHPUnit\Framework\TestCase;
 
-class BoxTest extends TestCase
+class SessionFilmTest extends TestCase
 {
     /**
-     * @var \NumaxLab\Icaa\Records\Box
+     * @var \NumaxLab\Icaa\Records\SessionFilm
      */
     protected $sut;
 
@@ -20,7 +19,7 @@ class BoxTest extends TestCase
     {
         parent::setUp();
 
-        $this->sut = new Box(Box::FILE_TYPE_REGULAR);
+        $this->sut = new SessionFilm();
     }
 
     protected function tearDown()
@@ -44,24 +43,13 @@ class BoxTest extends TestCase
 
     public function testConvertsToLine()
     {
-        $this->sut->setCode('123')
-            ->setLastScheduledFileSentAt(Carbon::now()->subDays(7))
-            ->setCurrentFileSentAt(Carbon::now())
-            ->setFileLinesQty(10)
-            ->setSessionsQty(2)
-            ->setTicketsQty(100)
-            ->setEarnings(2050.50);
+        $this->sut->setCinemaTheatreCode('123')
+            ->setSessionDatetime(Carbon::now())
+            ->setFilmId(5);
 
         $line = $this->sut->toLine();
 
         $this->assertInternalType('string', $line);
-        $this->assertEquals(56, mb_strlen($line));
-    }
-
-    public function testThrowsExceptionWhenInvalidFileType()
-    {
-        $this->expectException(InvalidFormatException::class);
-
-        new Box('AB');
+        $this->assertEquals(28, mb_strlen($line));
     }
 }
