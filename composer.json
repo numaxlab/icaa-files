@@ -1,0 +1,25 @@
+{
+    "name": "numaxlab/icaa-files",
+    "description": "ICAA files parser and dumper component",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Adrián P. Blunier",
+            "email": "adrian.blunier@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.6.4",
+        "nesbot/carbon": "^1.22"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.2"
+    },
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": { "NumaxLab\\Icaa\\": "" },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
+    }
+}
