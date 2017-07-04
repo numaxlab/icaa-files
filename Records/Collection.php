@@ -3,8 +3,10 @@
 namespace NumaxLab\Icaa\Records;
 
 use ArrayAccess;
+use Countable;
+use NumaxLab\Icaa\Exceptions\RecordsCollectionException;
 
-class Collection implements ArrayAccess
+class Collection implements ArrayAccess, Countable
 {
 
     /**
@@ -15,9 +17,16 @@ class Collection implements ArrayAccess
     /**
      * Collection constructor.
      * @param array $items
+     * @throws \NumaxLab\Icaa\Exceptions\RecordsCollectionException
      */
     public function __construct(array $items = [])
     {
+        foreach ($items as $item) {
+            if (! $item instanceof RecordInterface) {
+                throw new RecordsCollectionException(sprintf("Invalid provided item. Each item must implement %s", RecordInterface::class));
+            }
+        }
+
         $this->items = $items;
     }
 
@@ -62,20 +71,11 @@ class Collection implements ArrayAccess
     }
 
     /**
-     * @param mixed $key
-     * @return bool
-     */
-    public function offsetExists($key)
-    {
-        return array_key_exists($key, $this->items);
-    }
-
-    /**
      * Get an item from the collection by key.
      *
      * @param  mixed  $key
      * @param  mixed  $default
-     * @return mixed
+     * @return \NumaxLab\Icaa\Records\RecordInterface
      */
     public function get($key, $default = null)
     {
@@ -118,13 +118,23 @@ class Collection implements ArrayAccess
     }
 
     /**
+     * Count the number of items in the collection.
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->items);
+    }
+
+    /**
      * Put an item in the collection by key.
      *
      * @param  mixed  $key
-     * @param  mixed  $value
+     * @param  \NumaxLab\Icaa\Records\RecordInterface  $value
      * @return $this
      */
-    public function put($key, $value)
+    public function put($key, RecordInterface $value)
     {
         $this->offsetSet($key, $value);
 
@@ -134,14 +144,23 @@ class Collection implements ArrayAccess
     /**
      * Push an item onto the end of the collection.
      *
-     * @param  mixed  $value
+     * @param  \NumaxLab\Icaa\Records\RecordInterface  $value
      * @return $this
      */
-    public function push($value)
+    public function push(RecordInterface $value)
     {
         $this->offsetSet(null, $value);
 
         return $this;
+    }
+
+    /**
+     * @param mixed $key
+     * @return bool
+     */
+    public function offsetExists($key)
+    {
+        return array_key_exists($key, $this->items);
     }
 
     /**
