@@ -3,9 +3,7 @@
 namespace NumaxLab\Icaa;
 
 use NumaxLab\Icaa\Exceptions\MissingPropertyException;
-use NumaxLab\Icaa\Records\Box;
 use NumaxLab\Icaa\Records\CinemaTheatre;
-use NumaxLab\Icaa\Records\Collection;
 use NumaxLab\Icaa\Records\Film;
 use NumaxLab\Icaa\Records\Session;
 use NumaxLab\Icaa\Records\SessionFilm;
@@ -19,156 +17,19 @@ class Dumper
     private $endOfLine;
 
     /**
-     * @var \NumaxLab\Icaa\Records\Box
+     * @var \NumaxLab\Icaa\IcaaFile
      */
-    private $box;
-
-    /**
-     * @var \NumaxLab\Icaa\Records\Collection
-     */
-    private $cinemaTheatres;
-
-    /**
-     * @var \NumaxLab\Icaa\Records\Collection
-     */
-    private $sessions;
-
-    /**
-     * @var \NumaxLab\Icaa\Records\Collection
-     */
-    private $sessionsFilms;
-
-    /**
-     * @var \NumaxLab\Icaa\Records\Collection
-     */
-    private $films;
-
-    /**
-     * @var \NumaxLab\Icaa\Records\Collection
-     */
-    private $sessionsScheduling;
+    private $file;
 
     /**
      * Dumper constructor.
      * @param string $eol
+     * @param \NumaxLab\Icaa\IcaaFile $file
      */
-    public function __construct($eol = PHP_EOL)
+    public function __construct($eol, IcaaFile $file)
     {
         $this->endOfLine = $eol;
-
-        $this->cinemaTheatres = new Collection();
-        $this->sessions = new Collection();
-        $this->sessionsFilms = new Collection();
-        $this->films = new Collection();
-        $this->sessionsScheduling = new Collection();
-    }
-
-    /**
-     * @param \NumaxLab\Icaa\Records\Box $box
-     * @return Dumper
-     */
-    public function setBox(Box $box)
-    {
-        $this->box = $box;
-        return $this;
-    }
-
-    /**
-     * @param \NumaxLab\Icaa\Records\CinemaTheatre $cinemaTheatre
-     * @return Dumper
-     */
-    public function addCinemaTheatre(CinemaTheatre $cinemaTheatre)
-    {
-        $this->cinemaTheatres->push($cinemaTheatre);
-        return $this;
-    }
-
-    /**
-     * @param \NumaxLab\Icaa\Records\Session $session
-     * @return Dumper
-     */
-    public function addSession(Session $session)
-    {
-        $this->sessions->push($session);
-        return $this;
-    }
-
-    /**
-     * @param \NumaxLab\Icaa\Records\SessionFilm $sessionFilm
-     * @return Dumper
-     */
-    public function addSessionFilm(SessionFilm $sessionFilm)
-    {
-        $this->sessionsFilms->push($sessionFilm);
-        return $this;
-    }
-
-    /**
-     * @param \NumaxLab\Icaa\Records\Film $film
-     * @return Dumper
-     */
-    public function addFilm(Film $film)
-    {
-        $this->films->push($film);
-        return $this;
-    }
-
-    /**
-     * @param \NumaxLab\Icaa\Records\SessionScheduling $sessionScheduling
-     * @return Dumper
-     */
-    public function addSessionScheduling(SessionScheduling $sessionScheduling)
-    {
-        $this->sessionsScheduling->push($sessionScheduling);
-        return $this;
-    }
-
-    /**
-     * @return \NumaxLab\Icaa\Records\Box
-     */
-    public function getBox()
-    {
-        return $this->box;
-    }
-
-    /**
-     * @return \NumaxLab\Icaa\Records\Collection
-     */
-    public function getCinemaTheatres()
-    {
-        return $this->cinemaTheatres;
-    }
-
-    /**
-     * @return \NumaxLab\Icaa\Records\Collection
-     */
-    public function getSessions()
-    {
-        return $this->sessions;
-    }
-
-    /**
-     * @return \NumaxLab\Icaa\Records\Collection
-     */
-    public function getSessionsFilms()
-    {
-        return $this->sessionsFilms;
-    }
-
-    /**
-     * @return \NumaxLab\Icaa\Records\Collection
-     */
-    public function getFilms()
-    {
-        return $this->films;
-    }
-
-    /**
-     * @return \NumaxLab\Icaa\Records\Collection
-     */
-    public function getSessionsScheduling()
-    {
-        return $this->sessionsScheduling;
+        $this->file = $file;
     }
 
     /**
@@ -179,27 +40,27 @@ class Dumper
         $throwException = false;
         $missingProperty = '';
 
-        if (is_null($this->getBox())) {
+        if (is_null($this->file->getBox())) {
             $throwException = true;
             $missingProperty = 'box';
         }
-        if (! $throwException && $this->getCinemaTheatres()->count() === 0) {
+        if (! $throwException && $this->file->getCinemaTheatres()->count() === 0) {
             $throwException = true;
             $missingProperty = 'cinemaTheatres';
         }
-        if (! $throwException && $this->getSessions()->count() === 0) {
+        if (! $throwException && $this->file->getSessions()->count() === 0) {
             $throwException = true;
             $missingProperty = 'sessions';
         }
-        if (! $throwException && $this->getSessionsFilms()->count() === 0) {
+        if (! $throwException && $this->file->getSessionsFilms()->count() === 0) {
             $throwException = true;
             $missingProperty = 'sessionsFilms';
         }
-        if (! $throwException && $this->getFilms()->count() === 0) {
+        if (! $throwException && $this->file->getFilms()->count() === 0) {
             $throwException = true;
             $missingProperty = 'films';
         }
-        if (! $throwException && $this->getSessionsScheduling()->count() === 0) {
+        if (! $throwException && $this->file->getSessionsScheduling()->count() === 0) {
             $throwException = true;
             $missingProperty = 'sessionsScheduling';
         }
@@ -216,25 +77,25 @@ class Dumper
     {
         $this->checkProperties();
 
-        $dump = $this->box->toLine().$this->endOfLine;
+        $dump = $this->file->getBox()->toLine().$this->endOfLine;
         /** @var CinemaTheatre $cinemaTheatre */
-        foreach ($this->getCinemaTheatres() as $cinemaTheatre) {
+        foreach ($this->file->getCinemaTheatres() as $cinemaTheatre) {
             $dump .= $cinemaTheatre->toLine().$this->endOfLine;
         }
         /** @var Session $session */
-        foreach ($this->getSessions() as $session) {
+        foreach ($this->file->getSessions() as $session) {
             $dump .= $session->toLine().$this->endOfLine;
         }
-        /** @var \NumaxLab\Icaa\Records\SessionFilm $sessionFilm */
-        foreach ($this->getSessionsFilms() as $sessionFilm) {
+        /** @var SessionFilm $sessionFilm */
+        foreach ($this->file->getSessionsFilms() as $sessionFilm) {
             $dump .= $sessionFilm->toLine().$this->endOfLine;
         }
         /** @var Film $film */
-        foreach ($this->getFilms() as $film) {
+        foreach ($this->file->getFilms() as $film) {
             $dump .= $film->toLine().$this->endOfLine;
         }
         /** @var SessionScheduling $sessionScheduling */
-        foreach ($this->getSessionsScheduling() as $sessionScheduling) {
+        foreach ($this->file->getSessionsScheduling() as $sessionScheduling) {
             $dump .= $sessionScheduling->toLine().$this->endOfLine;
         }
 
