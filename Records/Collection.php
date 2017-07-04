@@ -3,12 +3,13 @@
 namespace NumaxLab\Icaa\Records;
 
 use ArrayAccess;
+use ArrayIterator;
 use Countable;
+use IteratorAggregate;
 use NumaxLab\Icaa\Exceptions\RecordsCollectionException;
 
-class Collection implements ArrayAccess, Countable
+class Collection implements ArrayAccess, Countable, IteratorAggregate
 {
-
     /**
      * @var array
      */
@@ -191,5 +192,13 @@ class Collection implements ArrayAccess, Countable
     public function offsetUnset($key)
     {
         unset($this->items[$key]);
+    }
+
+    /**
+     * @return \ArrayIterator
+     */
+    public function getIterator()
+    {
+        return new ArrayIterator($this->items);
     }
 }

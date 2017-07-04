@@ -2,11 +2,13 @@
 
 namespace NumaxLab\Icaa;
 
+use NumaxLab\Icaa\Exceptions\MissingPropertyException;
 use NumaxLab\Icaa\Records\Box;
 use NumaxLab\Icaa\Records\CinemaTheatre;
 use NumaxLab\Icaa\Records\Collection;
 use NumaxLab\Icaa\Records\Film;
 use NumaxLab\Icaa\Records\Session;
+use NumaxLab\Icaa\Records\SessionFilm;
 use NumaxLab\Icaa\Records\SessionScheduling;
 
 class Dumper
@@ -95,7 +97,7 @@ class Dumper
      * @param \NumaxLab\Icaa\Records\SessionFilm $sessionFilm
      * @return Dumper
      */
-    public function addSessionFilm($sessionFilm)
+    public function addSessionFilm(SessionFilm $sessionFilm)
     {
         $this->sessionsFilms->push($sessionFilm);
         return $this;
@@ -170,29 +172,69 @@ class Dumper
     }
 
     /**
+     * @throws \NumaxLab\Icaa\Exceptions\MissingPropertyException
+     */
+    protected function checkProperties()
+    {
+        $throwException = false;
+        $missingProperty = '';
+
+        if (is_null($this->getBox())) {
+            $throwException = true;
+            $missingProperty = 'box';
+        }
+        if (! $throwException && $this->getCinemaTheatres()->count() === 0) {
+            $throwException = true;
+            $missingProperty = 'cinemaTheatres';
+        }
+        if (! $throwException && $this->getSessions()->count() === 0) {
+            $throwException = true;
+            $missingProperty = 'sessions';
+        }
+        if (! $throwException && $this->getSessionsFilms()->count() === 0) {
+            $throwException = true;
+            $missingProperty = 'sessionsFilms';
+        }
+        if (! $throwException && $this->getFilms()->count() === 0) {
+            $throwException = true;
+            $missingProperty = 'films';
+        }
+        if (! $throwException && $this->getSessionsScheduling()->count() === 0) {
+            $throwException = true;
+            $missingProperty = 'sessionsScheduling';
+        }
+
+        if ($throwException) {
+            throw new MissingPropertyException(sprintf("Missing property %s", $missingProperty));
+        }
+    }
+
+    /**
      * @return string
      */
     public function dump()
     {
+        $this->checkProperties();
+
         $dump = $this->box->toLine().$this->endOfLine;
         /** @var CinemaTheatre $cinemaTheatre */
-        foreach ($this->cinemaTheatres as $cinemaTheatre) {
+        foreach ($this->getCinemaTheatres() as $cinemaTheatre) {
             $dump .= $cinemaTheatre->toLine().$this->endOfLine;
         }
         /** @var Session $session */
-        foreach ($this->sessions as $session) {
+        foreach ($this->getSessions() as $session) {
             $dump .= $session->toLine().$this->endOfLine;
         }
         /** @var \NumaxLab\Icaa\Records\SessionFilm $sessionFilm */
-        foreach ($this->sessionsFilms as $sessionFilm) {
+        foreach ($this->getSessionsFilms() as $sessionFilm) {
             $dump .= $sessionFilm->toLine().$this->endOfLine;
         }
         /** @var Film $film */
-        foreach ($this->films as $film) {
+        foreach ($this->getFilms() as $film) {
             $dump .= $film->toLine().$this->endOfLine;
         }
         /** @var SessionScheduling $sessionScheduling */
-        foreach ($this->sessionsScheduling as $sessionScheduling) {
+        foreach ($this->getSessionsScheduling() as $sessionScheduling) {
             $dump .= $sessionScheduling->toLine().$this->endOfLine;
         }
 

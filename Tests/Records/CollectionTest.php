@@ -99,6 +99,16 @@ class CollectionTest extends TestCase implements RecordInterface
         $this->assertCount(2, $collection);
     }
 
+    public function testIterable()
+    {
+        $mock = new self();
+
+        $collection = new Collection([$mock]);
+
+        $this->assertInstanceOf('ArrayIterator', $collection->getIterator());
+        $this->assertEquals([$mock], $collection->getIterator()->getArrayCopy());
+    }
+
     public function testEmptyCollectionIsEmpty()
     {
         $collection = new Collection();
