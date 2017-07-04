@@ -32,6 +32,8 @@ class DumperTest extends TestCase
         parent::tearDown();
 
         $this->sut = null;
+
+        Mockery::close();
     }
 
     public function testThrowsExceptionWhenMissingProperties()
