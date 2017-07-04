@@ -127,4 +127,13 @@ class SessionFilm implements RecordInterface
 
         return $line;
     }
+
+    /**
+     * @param string $line
+     * @return \NumaxLab\Icaa\Records\SessionFilm
+     */
+    public static function fromLine($line)
+    {
+        return new self();
+    }
 }

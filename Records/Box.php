@@ -282,4 +282,13 @@ class Box implements RecordInterface
 
         return $line;
     }
+
+    /**
+     * @param $line
+     * @return \NumaxLab\Icaa\Records\Box
+     */
+    public static function fromLine($line)
+    {
+        return new self(self::FILE_TYPE_REGULAR);
+    }
 }

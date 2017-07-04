@@ -216,4 +216,13 @@ class Session implements RecordInterface
 
         return $line;
     }
+
+    /**
+     * @param string $line
+     * @return \NumaxLab\Icaa\Records\Session
+     */
+    public static function fromLine($line)
+    {
+        return new self();
+    }
 }

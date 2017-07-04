@@ -164,18 +164,19 @@ class IcaaFile
 
     /**
      * @param $input
+     * @param string $eol
      * @return \NumaxLab\Icaa\IcaaFile
      */
-    public static function parse($input)
+    public static function parse($input, $eol = PHP_EOL)
     {
-        $parser = new Parser(new self());
+        $parser = new Parser($eol, new self());
 
         return $parser->parse($input);
     }
 
     /**
      * @param string $eol
-     * @return mixed
+     * @return string
      */
     public function dump($eol = PHP_EOL)
     {

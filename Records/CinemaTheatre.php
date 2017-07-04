@@ -98,4 +98,13 @@ class CinemaTheatre implements RecordInterface
 
         return $line;
     }
+
+    /**
+     * @param string $line
+     * @return \NumaxLab\Icaa\Records\CinemaTheatre
+     */
+    public static function fromLine($line)
+    {
+        return new self();
+    }
 }
