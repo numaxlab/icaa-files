@@ -328,6 +328,19 @@ class Film implements RecordInterface
      */
     public static function fromLine($line)
     {
-        return new self();
+        $self = new self();
+
+        $self->setCinemaTheatreCode(rtrim(substr($line, 1, 12)));
+        $self->setId((int) ltrim(substr($line, 13, 5), '0'));
+        $self->setClassificationRecordCode(rtrim(substr($line, 18, 12)));
+        $self->setTitle(rtrim(substr($line, 30, 50)));
+        $self->setDistributorCode(rtrim(substr($line, 80, 12)));
+        $self->setDistributorName(rtrim(substr($line, 92, 50)));
+        $self->setOriginalVersionCode(substr($line, 142, 1));
+        $self->setLangVersionCode(substr($line, 143, 1));
+        $self->setCaptionsLangCode(substr($line, 144, 1));
+        $self->setProjectionFormat(substr($line, 145, 1));
+
+        return $self;
     }
 }

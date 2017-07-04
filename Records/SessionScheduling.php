@@ -3,6 +3,7 @@
 namespace NumaxLab\Icaa\Records;
 
 
+use Carbon\Carbon;
 use NumaxLab\Icaa\Exceptions\MissingPropertyException;
 
 class SessionScheduling implements RecordInterface
@@ -133,6 +134,12 @@ class SessionScheduling implements RecordInterface
      */
     public static function fromLine($line)
     {
-        return new self();
+        $self = new self();
+
+        $self->setCinemaTheatreCode(rtrim(substr($line, 1, 12)));
+        $self->setSessionDatetime(Carbon::createFromFormat('dmy', substr($line, 13, 6)));
+        $self->setSessionsQty((int) ltrim(substr($line, 19, 2), '0'));
+
+        return $self;
     }
 }

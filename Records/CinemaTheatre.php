@@ -105,6 +105,11 @@ class CinemaTheatre implements RecordInterface
      */
     public static function fromLine($line)
     {
-        return new self();
+        $self = new self();
+
+        $self->setCode(rtrim(substr($line, 1, 12)));
+        $self->setName(rtrim(substr($line, 13, 30)));
+
+        return $self;
     }
 }

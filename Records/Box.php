@@ -72,11 +72,20 @@ class Box implements RecordInterface
     /**
      * @param string $code
      * @return \NumaxLab\Icaa\Records\Box
-     * @throws \NumaxLab\Icaa\Exceptions\InvalidFormatException
      */
     public function setCode($code)
     {
         $this->code = $code;
+        return $this;
+    }
+
+    /**
+     * @param $fileType
+     * @return $this
+     */
+    protected function setFileType($fileType)
+    {
+        $this->fileType = $fileType;
         return $this;
     }
 
@@ -284,11 +293,29 @@ class Box implements RecordInterface
     }
 
     /**
-     * @param $line
+     * @param string $line
      * @return \NumaxLab\Icaa\Records\Box
      */
     public static function fromLine($line)
     {
-        return new self(self::FILE_TYPE_REGULAR);
+        $firstDayOfYear = Carbon::createFromDate(Carbon::now()->year, 1, 1);
+
+        $self = new self(self::FILE_TYPE_REGULAR);
+
+        $self->setCode(substr($line, 1, 3));
+        $self->setFileType(substr($line, 3, 2));
+
+        $lastScheduledFileSentAtJulianDay = ltrim(substr($line, 6, 3), '0');
+        $self->setLastScheduledFileSentAt(clone $firstDayOfYear->addDays($lastScheduledFileSentAtJulianDay));
+
+        $currentFileSentAtJulianDay = ltrim(substr($line, 9, 3), '0');
+        $self->setCurrentFileSentAt(clone $firstDayOfYear->addDays($currentFileSentAtJulianDay));
+
+        $self->setFileLinesQty((int) ltrim(substr($line, 12, 11), '0'));
+        $self->setSessionsQty((int) ltrim(substr($line, 23, 11), '0'));
+        $self->setTicketsQty((int) ltrim(substr($line, 34, 11), '0'));
+        $self->setEarnings((float) ltrim(substr($line, 45, 11), '0'));
+
+        return $self;
     }
 }

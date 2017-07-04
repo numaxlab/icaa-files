@@ -223,6 +223,15 @@ class Session implements RecordInterface
      */
     public static function fromLine($line)
     {
-        return new self();
+        $self = new self();
+
+        $self->setCinemaTheatreCode(rtrim(substr($line, 1, 12)));
+        $self->setDatetime(Carbon::createFromFormat('dmyHi', substr($line, 13, 10)));
+        $self->setFilmsQty((int) ltrim(substr($line, 23, 2), '0'));
+        $self->setTicketsQty((int) ltrim(substr($line, 25, 5), '0'));
+        $self->setEarnings((float) ltrim(substr($line, 30, 8), '0'));
+        $self->setIncidentCode(substr($line, 38, 3));
+
+        return $self;
     }
 }

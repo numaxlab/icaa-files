@@ -3,6 +3,7 @@
 namespace NumaxLab\Icaa\Records;
 
 
+use Carbon\Carbon;
 use NumaxLab\Icaa\Exceptions\MissingPropertyException;
 
 class SessionFilm implements RecordInterface
@@ -134,6 +135,12 @@ class SessionFilm implements RecordInterface
      */
     public static function fromLine($line)
     {
-        return new self();
+        $self = new self();
+
+        $self->setCinemaTheatreCode(rtrim(substr($line, 1, 12)));
+        $self->setSessionDatetime(Carbon::createFromFormat('dmyHi', substr($line, 13, 10)));
+        $self->setFilmId((int) ltrim(substr($line, 23, 5), '0'));
+
+        return $self;
     }
 }
