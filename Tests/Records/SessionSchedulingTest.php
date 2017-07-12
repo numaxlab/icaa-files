@@ -7,6 +7,7 @@ use NumaxLab\Icaa\Exceptions\MissingPropertyException;
 use NumaxLab\Icaa\Records\RecordInterface;
 use NumaxLab\Icaa\Records\SessionScheduling;
 use PHPUnit\Framework\TestCase;
+use Stringy\Stringy;
 
 class SessionSchedulingTest extends TestCase
 {
@@ -50,6 +51,6 @@ class SessionSchedulingTest extends TestCase
         $line = $this->sut->toLine();
 
         $this->assertInternalType('string', $line);
-        $this->assertEquals(21, mb_strlen($line));
+        $this->assertEquals(21, Stringy::create($line)->length());
     }
 }

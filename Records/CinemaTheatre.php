@@ -4,6 +4,7 @@ namespace NumaxLab\Icaa\Records;
 
 
 use NumaxLab\Icaa\Exceptions\MissingPropertyException;
+use Stringy\Stringy;
 
 class CinemaTheatre implements RecordInterface
 {
@@ -93,8 +94,8 @@ class CinemaTheatre implements RecordInterface
         $this->checkProperties();
 
         $line = (string) self::RECORD_TYPE;
-        $line .= str_pad($this->getCode(), 12, ' ');
-        $line .= str_pad(substr($this->getName(), 0, 30), 30, ' ');
+        $line .= Stringy::create($this->getCode())->padRight(12, ' ');
+        $line .= Stringy::create($this->getName())->substr(0, 30)->padRight(30, ' ');
 
         return $line;
     }
@@ -107,8 +108,8 @@ class CinemaTheatre implements RecordInterface
     {
         $self = new self();
 
-        $self->setCode(rtrim(substr($line, 1, 12)));
-        $self->setName(rtrim(substr($line, 13, 30)));
+        $self->setCode((string) Stringy::create($line)->substr(1, 12)->trimRight());
+        $self->setName((string) Stringy::create($line)->substr(13, 30)->trimRight());
 
         return $self;
     }

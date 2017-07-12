@@ -6,6 +6,7 @@ use NumaxLab\Icaa\Exceptions\MissingPropertyException;
 use NumaxLab\Icaa\Records\Film;
 use NumaxLab\Icaa\Records\RecordInterface;
 use PHPUnit\Framework\TestCase;
+use Stringy\Stringy;
 
 class FilmTest extends TestCase
 {
@@ -56,7 +57,7 @@ class FilmTest extends TestCase
         $line = $this->sut->toLine();
 
         $this->assertInternalType('string', $line);
-        $this->assertEquals(146, mb_strlen($line));
+        $this->assertEquals(146, Stringy::create($line)->length());
     }
 
     public function testTrimsTooLongTexts()
@@ -74,6 +75,6 @@ class FilmTest extends TestCase
 
         $line = $this->sut->toLine();
 
-        $this->assertEquals(146, mb_strlen($line));
+        $this->assertEquals(146, Stringy::create($line)->length());
     }
 }

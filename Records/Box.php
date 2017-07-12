@@ -5,6 +5,7 @@ namespace NumaxLab\Icaa\Records;
 use Carbon\Carbon;
 use NumaxLab\Icaa\Exceptions\InvalidFormatException;
 use NumaxLab\Icaa\Exceptions\MissingPropertyException;
+use Stringy\Stringy;
 
 class Box implements RecordInterface
 {
@@ -267,27 +268,15 @@ class Box implements RecordInterface
         $line = (string) self::RECORD_TYPE;
         $line .= $this->getCode();
         $line .= $this->getFileType();
-        $line .= str_pad(
-            (string) $firstDayOfYear->diffInDays($this->getLastScheduledFileSentAt()),
-            3,
-            '0',
-            STR_PAD_LEFT
-        );
-        $line .= str_pad(
-            (string) $firstDayOfYear->diffInDays($this->getCurrentFileSentAt()),
-            3,
-            '0',
-            STR_PAD_LEFT
-        );
-        $line .= str_pad((string) $this->getFileLinesQty(), 11, '0', STR_PAD_LEFT);
-        $line .= str_pad((string) $this->getSessionsQty(), 11, '0', STR_PAD_LEFT);
-        $line .= str_pad((string) $this->getTicketsQty(), 11, '0', STR_PAD_LEFT);
-        $line .= str_pad(
-            (string) number_format($this->getEarnings(), 2, '.', ''),
-            11,
-            '0',
-            STR_PAD_LEFT
-        );
+        $line .= Stringy::create((string) $firstDayOfYear->diffInDays($this->getLastScheduledFileSentAt()))
+            ->padLeft(3, '0');
+        $line .= Stringy::create((string) $firstDayOfYear->diffInDays($this->getCurrentFileSentAt()))
+            ->padLeft(3, '0');
+        $line .= Stringy::create((string) $this->getFileLinesQty())->padLeft(11, '0');
+        $line .= Stringy::create((string) $this->getSessionsQty())->padLeft(11, '0');
+        $line .= Stringy::create((string) $this->getTicketsQty())->padLeft(11, '0');
+        $line .= Stringy::create(number_format($this->getEarnings(), 2, '.', ''))
+            ->padLeft(11, '0');
 
         return $line;
     }
@@ -302,19 +291,21 @@ class Box implements RecordInterface
 
         $self = new self(self::FILE_TYPE_REGULAR);
 
-        $self->setCode(substr($line, 1, 3));
-        $self->setFileType(substr($line, 3, 2));
+        $self->setCode((string) Stringy::create($line)->substr(1, 3));
+        $self->setFileType((string) Stringy::create($line)->substr(3, 2));
 
-        $lastScheduledFileSentAtJulianDay = ltrim(substr($line, 6, 3), '0');
+        $lastScheduledFileSentAtJulianDay = (int)(string) Stringy::create($line)->substr(6, 3)
+            ->trimLeft('0');
         $self->setLastScheduledFileSentAt(clone $firstDayOfYear->addDays($lastScheduledFileSentAtJulianDay));
 
-        $currentFileSentAtJulianDay = ltrim(substr($line, 9, 3), '0');
+        $currentFileSentAtJulianDay = (int)(string) Stringy::create($line)->substr(9, 3)
+            ->trimLeft('0');
         $self->setCurrentFileSentAt(clone $firstDayOfYear->addDays($currentFileSentAtJulianDay));
 
-        $self->setFileLinesQty((int) ltrim(substr($line, 12, 11), '0'));
-        $self->setSessionsQty((int) ltrim(substr($line, 23, 11), '0'));
-        $self->setTicketsQty((int) ltrim(substr($line, 34, 11), '0'));
-        $self->setEarnings((float) ltrim(substr($line, 45, 11), '0'));
+        $self->setFileLinesQty((int)(string) Stringy::create($line)->substr(12, 11)->trimLeft('0'));
+        $self->setSessionsQty((int)(string) Stringy::create($line)->substr(23, 11)->trimLeft('0'));
+        $self->setTicketsQty((int)(string) Stringy::create($line)->substr(34, 11)->trimLeft('0'));
+        $self->setEarnings((float)(string) Stringy::create($line)->substr(45, 11)->trimLeft('0'));
 
         return $self;
     }

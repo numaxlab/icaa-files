@@ -3,6 +3,7 @@
 namespace NumaxLab\Icaa\Records;
 
 use NumaxLab\Icaa\Exceptions\MissingPropertyException;
+use Stringy\Stringy;
 
 class Film implements RecordInterface
 {
@@ -308,12 +309,12 @@ class Film implements RecordInterface
         $this->checkProperties();
 
         $line = (string) self::RECORD_TYPE;
-        $line .= str_pad($this->getCinemaTheatreCode(), 12, ' ');
-        $line .= str_pad($this->getId(), 5, '0', STR_PAD_LEFT);
-        $line .= str_pad($this->getClassificationRecordCode(), 12, ' ');
-        $line .= str_pad(substr($this->getTitle(), 0, 50), 50, ' ');
-        $line .= str_pad($this->getDistributorCode(), 12, ' ');
-        $line .= str_pad(substr($this->getDistributorName(), 0, 50), 50, ' ');
+        $line .= Stringy::create($this->getCinemaTheatreCode())->padRight(12, ' ');
+        $line .= Stringy::create((string) $this->getId())->padLeft(5, '0');
+        $line .= Stringy::create($this->getClassificationRecordCode())->padRight(12, ' ');
+        $line .= Stringy::create($this->getTitle())->substr(0, 50)->padRight(50, ' ');
+        $line .= Stringy::create($this->getDistributorCode())->padRight(12, ' ');
+        $line .= Stringy::create($this->getDistributorName())->substr(0, 50)->padRight(50, ' ');
         $line .= $this->getOriginalVersionCode();
         $line .= $this->getLangVersionCode();
         $line .= $this->getCaptionsLangCode();

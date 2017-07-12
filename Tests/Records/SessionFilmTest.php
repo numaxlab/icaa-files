@@ -7,6 +7,7 @@ use NumaxLab\Icaa\Exceptions\MissingPropertyException;
 use NumaxLab\Icaa\Records\RecordInterface;
 use NumaxLab\Icaa\Records\SessionFilm;
 use PHPUnit\Framework\TestCase;
+use Stringy\Stringy;
 
 class SessionFilmTest extends TestCase
 {
@@ -50,6 +51,6 @@ class SessionFilmTest extends TestCase
         $line = $this->sut->toLine();
 
         $this->assertInternalType('string', $line);
-        $this->assertEquals(28, mb_strlen($line));
+        $this->assertEquals(28, Stringy::create($line)->length());
     }
 }

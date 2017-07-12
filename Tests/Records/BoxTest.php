@@ -8,6 +8,7 @@ use NumaxLab\Icaa\Exceptions\MissingPropertyException;
 use NumaxLab\Icaa\Records\Box;
 use NumaxLab\Icaa\Records\RecordInterface;
 use PHPUnit\Framework\TestCase;
+use Stringy\Stringy;
 
 class BoxTest extends TestCase
 {
@@ -55,7 +56,7 @@ class BoxTest extends TestCase
         $line = $this->sut->toLine();
 
         $this->assertInternalType('string', $line);
-        $this->assertEquals(56, mb_strlen($line));
+        $this->assertEquals(56, Stringy::create($line)->length());
     }
 
     public function testThrowsExceptionWhenInvalidFileType()
