@@ -133,4 +133,9 @@ class CollectionTest extends TestCase implements RecordInterface
     {
         return $this->line;
     }
+
+    public static function fromLine($line)
+    {
+        //
+    }
 }
