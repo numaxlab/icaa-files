@@ -1,4 +1,4 @@
-# ICAA Files Component
+# ICAA Files Component [![Build Status](https://travis-ci.org/numaxlab/icaa-files.svg?branch=master)](https://travis-ci.org/numaxlab/icaa-files)
 
 Componente para lectura y escritura de ficheros de comunicación entre buzones homologados y el ICAA (Instituto de la Cinematografía y de las Artes Audiovisuales) según el [BOE-A-2011-11110](http://www.boe.es/boe/dias/2011/06/28/pdfs/BOE-A-2011-11110.pdf).
 
