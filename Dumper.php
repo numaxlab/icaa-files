@@ -54,8 +54,12 @@ class Dumper
             $dump .= $film->toLine().$this->endOfLine;
         }
         /** @var SessionScheduling $sessionScheduling */
-        foreach ($this->file->sessionsScheduling() as $sessionScheduling) {
-            $dump .= $sessionScheduling->toLine().$this->endOfLine;
+        foreach ($this->file->sessionsScheduling() as $key => $sessionScheduling) {
+            $dump .= $sessionScheduling->toLine();
+
+            if ($key !== $this->file->sessionsScheduling()->count() - 1) {
+                $dump .= $this->endOfLine;
+            }
         }
 
         return $dump;

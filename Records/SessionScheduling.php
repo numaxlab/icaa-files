@@ -118,7 +118,7 @@ class SessionScheduling implements RecordInterface
             'dmy',
             (string) Stringy::create($line)->substr(13, 6)
         );
-        $sessionsQty = (string) Stringy::create($line)->substr(19, 2)->trimLeft('0');
+        $sessionsQty = (int)(string) Stringy::create($line)->substr(19, 2)->trimLeft('0');
 
         return new self(
             $cinemaTheatreCode,

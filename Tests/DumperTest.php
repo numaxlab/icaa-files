@@ -73,7 +73,7 @@ class DumperTest extends TestCase
             'testsession'.PHP_EOL.
             'testsessionfilm'.PHP_EOL.
             'testfilm'.PHP_EOL.
-            'testsessionscheduling'.PHP_EOL;
+            'testsessionscheduling';
 
         $dump = $this->sut->dump();
 

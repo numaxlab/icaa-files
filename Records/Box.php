@@ -270,7 +270,7 @@ class Box implements RecordInterface
         $firstDayOfYear = Carbon::createFromDate(Carbon::now()->year, 1, 1);
 
         $code = (string) Stringy::create($line)->substr(1, 3);
-        $fileType = (string) Stringy::create($line)->substr(3, 2);
+        $fileType = (string) Stringy::create($line)->substr(4, 2);
 
         $lastScheduledFileSentAtJulianDay = (int)(string) Stringy::create($line)->substr(6, 3)
             ->trimLeft('0');
