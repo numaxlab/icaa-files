@@ -61,7 +61,8 @@ class Parser
                 throw new ParserException(sprintf('Unexpected record type %s', $recordType));
             }
 
-            $record = $this->typesToRecords[$recordType]::fromLine($line);
+            $recordTypeClass = $this->typesToRecords[$recordType];
+            $record = $recordTypeClass::fromLine($line);
 
             switch (true) {
                 case $record instanceof Box:
