@@ -211,7 +211,7 @@ class IcaaFile
     {
         $fileLinesQty = 1 + $this->cinemaTheatres()->count() +
             $this->sessions()->count() + $this->sessionsFilms()->count() +
-            $this->films()->count() + $this->sessionsScheduling();
+            $this->films()->count() + $this->sessionsScheduling()->count();
 
         $sessionsQty = $this->sessions()->count();
 
