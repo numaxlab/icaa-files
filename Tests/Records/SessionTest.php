@@ -3,7 +3,6 @@
 namespace NumaxLab\Icaa\Tests\Records;
 
 use Carbon\Carbon;
-use NumaxLab\Icaa\Exceptions\MissingPropertyException;
 use NumaxLab\Icaa\Records\RecordInterface;
 use NumaxLab\Icaa\Records\Session;
 use PHPUnit\Framework\TestCase;
@@ -11,47 +10,32 @@ use Stringy\Stringy;
 
 class SessionTest extends TestCase
 {
-    /**
-     * @var \NumaxLab\Icaa\Records\Session
-     */
-    protected $sut;
-
-    protected function setUp()
-    {
-        parent::setUp();
-
-        $this->sut = new Session();
-    }
-
-    protected function tearDown()
-    {
-        parent::tearDown();
-
-        $this->sut = null;
-    }
-
     public function testImplementsRecordInterface()
     {
-        $this->assertInstanceOf(RecordInterface::class, $this->sut);
-    }
+        $session = new Session(
+            '123456',
+            Carbon::now()->subDays(5),
+            1,
+            30,
+            250.30,
+            '000'
+        );
 
-    public function testThrowsExceptionWhenMissingProperties()
-    {
-        $this->expectException(MissingPropertyException::class);
-
-        $this->sut->toLine();
+        $this->assertInstanceOf(RecordInterface::class, $session);
     }
 
     public function testConvertsToLine()
     {
-        $this->sut->setCinemaTheatreCode('123')
-            ->setDatetime(Carbon::now())
-            ->setFilmsQty(6)
-            ->setTicketsQty(356)
-            ->setEarnings(1345.60)
-            ->setIncidentCode('ABC');
+        $session = new Session(
+            '123456',
+            Carbon::now()->subDays(5),
+            2,
+            145,
+            1345.65,
+            '000'
+        );
 
-        $line = $this->sut->toLine();
+        $line = $session->toLine();
 
         $this->assertInternalType('string', $line);
         $this->assertEquals(41, Stringy::create($line)->length());

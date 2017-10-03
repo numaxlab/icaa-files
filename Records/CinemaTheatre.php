@@ -2,8 +2,8 @@
 
 namespace NumaxLab\Icaa\Records;
 
-
-use NumaxLab\Icaa\Exceptions\MissingPropertyException;
+use Assert\Assert;
+use Assert\Assertion;
 use Stringy\Stringy;
 
 class CinemaTheatre implements RecordInterface
@@ -22,30 +22,35 @@ class CinemaTheatre implements RecordInterface
 
     /**
      * CinemaTheatre constructor.
+     * @param string $code
+     * @param string $name
      */
-    public function __construct()
+    public function __construct($code, $name)
     {
-
+        $this->setCode($code);
+        $this->setName($name);
     }
 
     /**
      * @param string $code
-     * @return CinemaTheatre
      */
-    public function setCode($code)
+    private function setCode($code)
     {
+        Assert::that($code)
+            ->notEmpty()
+            ->length(6);
+
         $this->code = $code;
-        return $this;
     }
 
     /**
      * @param string $name
-     * @return CinemaTheatre
      */
-    public function setName($name)
+    private function setName($name)
     {
+        Assertion::notEmpty($name);
+
         $this->name = $name;
-        return $this;
     }
 
     /**
@@ -65,34 +70,10 @@ class CinemaTheatre implements RecordInterface
     }
 
     /**
-     * @throws \NumaxLab\Icaa\Exceptions\MissingPropertyException
-     */
-    private function checkProperties()
-    {
-        $throwException = false;
-        $missingProperty = '';
-
-        if (is_null($this->getCode())) {
-            $throwException = true;
-            $missingProperty = 'code';
-        }
-        if (! $throwException && is_null($this->getName())) {
-            $throwException = true;
-            $missingProperty = 'name';
-        }
-
-        if ($throwException) {
-            throw new MissingPropertyException(sprintf("Missing property %s", $missingProperty));
-        }
-    }
-
-    /**
      * @return string
      */
     public function toLine()
     {
-        $this->checkProperties();
-
         $line = (string) self::RECORD_TYPE;
         $line .= Stringy::create($this->getCode())->padRight(12, ' ');
         $line .= Stringy::create($this->getName())->substr(0, 30)->padRight(30, ' ');
@@ -102,15 +83,13 @@ class CinemaTheatre implements RecordInterface
 
     /**
      * @param string $line
-     * @return \NumaxLab\Icaa\Records\CinemaTheatre
+     * @return CinemaTheatre
      */
     public static function fromLine($line)
     {
-        $self = new self();
+        $code = (string) Stringy::create($line)->substr(1, 12)->trimRight();
+        $name = (string) Stringy::create($line)->substr(13, 30)->trimRight();
 
-        $self->setCode((string) Stringy::create($line)->substr(1, 12)->trimRight());
-        $self->setName((string) Stringy::create($line)->substr(13, 30)->trimRight());
-
-        return $self;
+        return new self($code, $name);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace NumaxLab\Icaa\Tests\Records;
 
-use NumaxLab\Icaa\Exceptions\MissingPropertyException;
 use NumaxLab\Icaa\Records\CinemaTheatre;
 use NumaxLab\Icaa\Records\RecordInterface;
 use PHPUnit\Framework\TestCase;
@@ -10,43 +9,18 @@ use Stringy\Stringy;
 
 class CinemaTheatreTest extends TestCase
 {
-    /**
-     * @var \NumaxLab\Icaa\Records\CinemaTheatre
-     */
-    protected $sut;
-
-    protected function setUp()
-    {
-        parent::setUp();
-
-        $this->sut = new CinemaTheatre();
-    }
-
-    protected function tearDown()
-    {
-        parent::tearDown();
-
-        $this->sut = null;
-    }
-
     public function testImplementsRecordInterface()
     {
-        $this->assertInstanceOf(RecordInterface::class, $this->sut);
-    }
+        $cinemaTheatre = new CinemaTheatre('123456', 'Test cinema theatre');
 
-    public function testThrowsExceptionWhenMissingProperties()
-    {
-        $this->expectException(MissingPropertyException::class);
-
-        $this->sut->toLine();
+        $this->assertInstanceOf(RecordInterface::class, $cinemaTheatre);
     }
 
     public function testConvertsToLine()
     {
-        $this->sut->setCode('123')
-            ->setName('Test cinema theatre 1');
+        $cinemaTheatre = new CinemaTheatre('123456', 'Test cinema theatre');
 
-        $line = $this->sut->toLine();
+        $line = $cinemaTheatre->toLine();
 
         $this->assertInternalType('string', $line);
         $this->assertEquals(43, Stringy::create($line)->length());
@@ -54,10 +28,12 @@ class CinemaTheatreTest extends TestCase
 
     public function testTrimsTooLongName()
     {
-        $this->sut->setCode('123')
-            ->setName('Test cinema with a long name that should be trimmed');
+        $cinemaTheatre = new CinemaTheatre(
+            '123456',
+            'Test cinema with a long name that should be trimmed'
+        );
 
-        $line = $this->sut->toLine();
+        $line = $cinemaTheatre->toLine();
 
         $this->assertEquals(43, Stringy::create($line)->length());
     }

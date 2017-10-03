@@ -17,14 +17,14 @@ class Dumper
     private $endOfLine;
 
     /**
-     * @var \NumaxLab\Icaa\IcaaFile
+     * @var IcaaFile
      */
     private $file;
 
     /**
      * Dumper constructor.
      * @param string $eol
-     * @param \NumaxLab\Icaa\IcaaFile $file
+     * @param IcaaFile $file
      */
     public function __construct($eol, IcaaFile $file)
     {

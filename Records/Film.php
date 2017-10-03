@@ -2,7 +2,8 @@
 
 namespace NumaxLab\Icaa\Records;
 
-use NumaxLab\Icaa\Exceptions\MissingPropertyException;
+use Assert\Assert;
+use Assert\Assertion;
 use Stringy\Stringy;
 
 class Film implements RecordInterface
@@ -22,7 +23,7 @@ class Film implements RecordInterface
     /**
      * @var string
      */
-    private $classificationRecordCode;
+    private $ratingRecordNumber;
 
     /**
      * @var string
@@ -57,114 +58,148 @@ class Film implements RecordInterface
     /**
      * @var string
      */
-    private $projectionFormat;
+    private $projectionFormatCode;
 
     /**
      * Film constructor.
+     * @param string $cinemaTheatreCode
+     * @param int $id
+     * @param string $ratingRecordNumber
+     * @param string $title
+     * @param string $distributorCode
+     * @param string $distributorName
+     * @param string $originalVersionCode
+     * @param string $langVersionCode
+     * @param string $captionsLangCode
+     * @param string $projectionFormatCode
      */
-    public function __construct()
+    public function __construct(
+        $cinemaTheatreCode,
+        $id,
+        $ratingRecordNumber,
+        $title,
+        $distributorCode,
+        $distributorName,
+        $originalVersionCode,
+        $langVersionCode,
+        $captionsLangCode,
+        $projectionFormatCode
+    )
     {
-
+        $this->setCinemaTheatreCode($cinemaTheatreCode);
+        $this->setId($id);
+        $this->setRatingRecordNumber($ratingRecordNumber);
+        $this->setTitle($title);
+        $this->setDistributorCode($distributorCode);
+        $this->setDistributorName($distributorName);
+        $this->setOriginalVersionCode($originalVersionCode);
+        $this->setLangVersionCode($langVersionCode);
+        $this->setCaptionsLangCode($captionsLangCode);
+        $this->setProjectionFormatCode($projectionFormatCode);
     }
 
     /**
      * @param string $cinemaTheatreCode
-     * @return Film
      */
-    public function setCinemaTheatreCode($cinemaTheatreCode)
+    private function setCinemaTheatreCode($cinemaTheatreCode)
     {
+        Assert::that($cinemaTheatreCode)
+            ->notEmpty()
+            ->length(6);
+
         $this->cinemaTheatreCode = $cinemaTheatreCode;
-        return $this;
     }
 
     /**
      * @param int $id
-     * @return Film
      */
-    public function setId($id)
+    private function setId($id)
     {
+        Assert::that($id)
+            ->integer()
+            ->greaterThan(0);
+
         $this->id = $id;
-        return $this;
     }
 
     /**
-     * @param string $classificationRecordCode
-     * @return Film
+     * @param string $ratingRecordNumber
      */
-    public function setClassificationRecordCode($classificationRecordCode)
+    private function setRatingRecordNumber($ratingRecordNumber)
     {
-        $this->classificationRecordCode = $classificationRecordCode;
-        return $this;
+        Assertion::notEmpty($ratingRecordNumber);
+
+        $this->ratingRecordNumber = $ratingRecordNumber;
     }
 
     /**
      * @param string $title
-     * @return Film
      */
-    public function setTitle($title)
+    private function setTitle($title)
     {
+        Assertion::notEmpty($title);
+
         $this->title = $title;
-        return $this;
     }
 
     /**
      * @param string $distributorCode
-     * @return Film
      */
-    public function setDistributorCode($distributorCode)
+    private function setDistributorCode($distributorCode)
     {
+        Assertion::notEmpty($distributorCode);
+
         $this->distributorCode = $distributorCode;
-        return $this;
     }
 
     /**
      * @param string $distributorName
-     * @return Film
      */
-    public function setDistributorName($distributorName)
+    private function setDistributorName($distributorName)
     {
+        Assertion::notEmpty($distributorName);
+
         $this->distributorName = $distributorName;
-        return $this;
     }
 
     /**
      * @param string $originalVersionCode
-     * @return Film
      */
-    public function setOriginalVersionCode($originalVersionCode)
+    private function setOriginalVersionCode($originalVersionCode)
     {
+        Assertion::notEmpty($originalVersionCode);
+
         $this->originalVersionCode = $originalVersionCode;
-        return $this;
     }
 
     /**
      * @param string $langVersionCode
-     * @return Film
      */
-    public function setLangVersionCode($langVersionCode)
+    private function setLangVersionCode($langVersionCode)
     {
+        Assertion::notEmpty($langVersionCode);
+
         $this->langVersionCode = $langVersionCode;
-        return $this;
     }
 
     /**
      * @param string $captionsLangCode
-     * @return Film
      */
-    public function setCaptionsLangCode($captionsLangCode)
+    private function setCaptionsLangCode($captionsLangCode)
     {
+        Assertion::notEmpty($captionsLangCode);
+
         $this->captionsLangCode = $captionsLangCode;
-        return $this;
     }
 
     /**
-     * @param string $projectionFormat
-     * @return Film
+     * @param string $projectionFormatCode
      */
-    public function setProjectionFormat($projectionFormat)
+    private function setProjectionFormatCode($projectionFormatCode)
     {
-        $this->projectionFormat = $projectionFormat;
-        return $this;
+        Assertion::notEmpty($projectionFormatCode);
+
+        $this->projectionFormatCode = $projectionFormatCode;
     }
 
     /**
@@ -186,9 +221,9 @@ class Film implements RecordInterface
     /**
      * @return string
      */
-    public function getClassificationRecordCode()
+    public function getRatingRecordNumber()
     {
-        return $this->classificationRecordCode;
+        return $this->ratingRecordNumber;
     }
 
     /**
@@ -242,63 +277,9 @@ class Film implements RecordInterface
     /**
      * @return string
      */
-    public function getProjectionFormat()
+    public function getProjectionFormatCode()
     {
-        return $this->projectionFormat;
-    }
-
-    /**
-     * @throws \NumaxLab\Icaa\Exceptions\MissingPropertyException
-     */
-    private function checkProperties()
-    {
-        $throwException = false;
-        $missingProperty = '';
-
-        if (is_null($this->getCinemaTheatreCode())) {
-            $throwException = true;
-            $missingProperty = 'cinemaTheatreCode';
-        }
-        if (! $throwException && is_null($this->getId())) {
-            $throwException = true;
-            $missingProperty = 'id';
-        }
-        if (! $throwException && is_null($this->getClassificationRecordCode())) {
-            $throwException = true;
-            $missingProperty = 'classificationRecordCode';
-        }
-        if (! $throwException && is_null($this->getTitle())) {
-            $throwException = true;
-            $missingProperty = 'title';
-        }
-        if (! $throwException && is_null($this->getDistributorCode())) {
-            $throwException = true;
-            $missingProperty = 'distributorCode';
-        }
-        if (! $throwException && is_null($this->getDistributorName())) {
-            $throwException = true;
-            $missingProperty = 'distributorName';
-        }
-        if (! $throwException && is_null($this->getOriginalVersionCode())) {
-            $throwException = true;
-            $missingProperty = 'originalVersionCode';
-        }
-        if (! $throwException && is_null($this->getLangVersionCode())) {
-            $throwException = true;
-            $missingProperty = 'langVersionCode';
-        }
-        if (! $throwException && is_null($this->getCaptionsLangCode())) {
-            $throwException = true;
-            $missingProperty = 'captionsLangCode';
-        }
-        if (! $throwException && is_null($this->getProjectionFormat())) {
-            $throwException = true;
-            $missingProperty = 'projectionFormat';
-        }
-
-        if ($throwException) {
-            throw new MissingPropertyException(sprintf("Missing property %s", $missingProperty));
-        }
+        return $this->projectionFormatCode;
     }
 
     /**
@@ -306,42 +287,49 @@ class Film implements RecordInterface
      */
     public function toLine()
     {
-        $this->checkProperties();
-
         $line = (string) self::RECORD_TYPE;
         $line .= Stringy::create($this->getCinemaTheatreCode())->padRight(12, ' ');
         $line .= Stringy::create((string) $this->getId())->padLeft(5, '0');
-        $line .= Stringy::create($this->getClassificationRecordCode())->padRight(12, ' ');
+        $line .= Stringy::create($this->getRatingRecordNumber())->padRight(12, ' ');
         $line .= Stringy::create($this->getTitle())->substr(0, 50)->padRight(50, ' ');
         $line .= Stringy::create($this->getDistributorCode())->padRight(12, ' ');
         $line .= Stringy::create($this->getDistributorName())->substr(0, 50)->padRight(50, ' ');
         $line .= $this->getOriginalVersionCode();
         $line .= $this->getLangVersionCode();
         $line .= $this->getCaptionsLangCode();
-        $line .= $this->getProjectionFormat();
+        $line .= $this->getProjectionFormatCode();
 
         return $line;
     }
 
     /**
      * @param string $line
-     * @return \NumaxLab\Icaa\Records\Film
+     * @return Film
      */
     public static function fromLine($line)
     {
-        $self = new self();
+        $cinemaTheatreCode = (string) Stringy::create($line)->substr(1, 12)->trimRight();
+        $id = (int)(string) Stringy::create($line)->substr(13, 5)->trimLeft('0');
+        $ratingRecordNumber = (string) Stringy::create($line)->substr(18, 12)->trimRight();
+        $title = (string) Stringy::create($line)->substr(30, 50)->trimRight();
+        $distributorCode = (string) Stringy::create($line)->substr(80, 12)->trimRight();
+        $distributorName = (string) Stringy::create($line)->substr(92, 50)->trimRight();
+        $originalVersionCode = (string) Stringy::create($line)->substr(142, 1);
+        $langVersionCode = (string) Stringy::create($line)->substr(143, 1);
+        $captionsLangCode = (string) Stringy::create($line)->substr(144, 1);
+        $projectionFormatCode = (string) Stringy::create($line)->substr(145, 1);
 
-        $self->setCinemaTheatreCode(rtrim(substr($line, 1, 12)));
-        $self->setId((int) ltrim(substr($line, 13, 5), '0'));
-        $self->setClassificationRecordCode(rtrim(substr($line, 18, 12)));
-        $self->setTitle(rtrim(substr($line, 30, 50)));
-        $self->setDistributorCode(rtrim(substr($line, 80, 12)));
-        $self->setDistributorName(rtrim(substr($line, 92, 50)));
-        $self->setOriginalVersionCode(substr($line, 142, 1));
-        $self->setLangVersionCode(substr($line, 143, 1));
-        $self->setCaptionsLangCode(substr($line, 144, 1));
-        $self->setProjectionFormat(substr($line, 145, 1));
-
-        return $self;
+        return new self(
+            $cinemaTheatreCode,
+            $id,
+            $ratingRecordNumber,
+            $title,
+            $distributorCode,
+            $distributorName,
+            $originalVersionCode,
+            $langVersionCode,
+            $captionsLangCode,
+            $projectionFormatCode
+        );
     }
 }

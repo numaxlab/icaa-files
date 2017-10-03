@@ -2,8 +2,9 @@
 
 namespace NumaxLab\Icaa\Records;
 
+use Assert\Assert;
 use Carbon\Carbon;
-use NumaxLab\Icaa\Exceptions\MissingPropertyException;
+use Stringy\Stringy;
 
 class Session implements RecordInterface
 {
@@ -15,9 +16,9 @@ class Session implements RecordInterface
     private $cinemaTheatreCode;
 
     /**
-     * @var \Carbon\Carbon
+     * @var Carbon
      */
-    private $datetime;
+    private $occurredOn;
 
     /**
      * @var int
@@ -41,69 +42,98 @@ class Session implements RecordInterface
 
     /**
      * Session constructor.
+     * @param string $cinemaTheatreCode
+     * @param Carbon $occurredOn
+     * @param int $filmsQty
+     * @param int $ticketsQty
+     * @param float $earnings
+     * @param string $incidentCode
      */
-    public function __construct()
+    public function __construct(
+        $cinemaTheatreCode,
+        Carbon $occurredOn,
+        $filmsQty,
+        $ticketsQty,
+        $earnings,
+        $incidentCode
+    )
     {
-
+        $this->setCinemaTheatreCode($cinemaTheatreCode);
+        $this->setOccurredOn($occurredOn);
+        $this->setFilmsQty($filmsQty);
+        $this->setTicketsQty($ticketsQty);
+        $this->setEarnings($earnings);
+        $this->setIncidentCode($incidentCode);
     }
 
     /**
      * @param string $cinemaTheatreCode
-     * @return Session
      */
-    public function setCinemaTheatreCode($cinemaTheatreCode)
+    private function setCinemaTheatreCode($cinemaTheatreCode)
     {
+        Assert::that($cinemaTheatreCode)
+            ->notEmpty()
+            ->length(6);
+
         $this->cinemaTheatreCode = $cinemaTheatreCode;
-        return $this;
     }
 
     /**
-     * @param \Carbon\Carbon $datetime
-     * @return Session
+     * @param Carbon $occurredOn
      */
-    public function setDatetime(Carbon $datetime)
+    private function setOccurredOn(Carbon $occurredOn)
     {
-        $this->datetime = $datetime;
-        return $this;
+        $this->occurredOn = $occurredOn;
     }
 
     /**
      * @param int $filmsQty
-     * @return Session
      */
-    public function setFilmsQty($filmsQty)
+    private function setFilmsQty($filmsQty)
     {
+        Assert::that($filmsQty)
+            ->integer()
+            ->greaterThan(0);
+
         $this->filmsQty = $filmsQty;
-        return $this;
     }
 
     /**
      * @param int $ticketsQty
-     * @return Session
      */
-    public function setTicketsQty($ticketsQty)
+    private function setTicketsQty($ticketsQty)
     {
+        Assert::that($ticketsQty)
+            ->integer()
+            ->greaterOrEqualThan(0);
+
         $this->ticketsQty = $ticketsQty;
-        return $this;
     }
 
     /**
      * @param float $earnings
-     * @return Session
      */
-    public function setEarnings($earnings)
+    private function setEarnings($earnings)
     {
+        Assert::that($earnings)
+            ->float()
+            ->greaterOrEqualThan(0);
+
         $this->earnings = $earnings;
-        return $this;
     }
 
     /**
      * @param string $incidentCode
      * @return Session
      */
-    public function setIncidentCode($incidentCode)
+    private function setIncidentCode($incidentCode)
     {
+        Assert::that($incidentCode)
+            ->notEmpty()
+            ->length(3);
+
         $this->incidentCode = $incidentCode;
+
         return $this;
     }
 
@@ -116,11 +146,11 @@ class Session implements RecordInterface
     }
 
     /**
-     * @return \Carbon\Carbon
+     * @return Carbon
      */
-    public function getDatetime()
+    public function getOccurredOn()
     {
-        return $this->datetime;
+        return $this->occurredOn;
     }
 
     /**
@@ -156,62 +186,18 @@ class Session implements RecordInterface
     }
 
     /**
-     * @throws \NumaxLab\Icaa\Exceptions\MissingPropertyException
-     */
-    private function checkProperties()
-    {
-        $throwException = false;
-        $missingProperty = '';
-
-        if (is_null($this->getCinemaTheatreCode())) {
-            $throwException = true;
-            $missingProperty = 'cinemaTheatreCode';
-        }
-        if (! $throwException && is_null($this->getDatetime())) {
-            $throwException = true;
-            $missingProperty = 'datetime';
-        }
-        if (! $throwException && is_null($this->getFilmsQty())) {
-            $throwException = true;
-            $missingProperty = 'filmsQty';
-        }
-        if (! $throwException && is_null($this->getTicketsQty())) {
-            $throwException = true;
-            $missingProperty = 'ticketsQty';
-        }
-        if (! $throwException && is_null($this->getEarnings())) {
-            $throwException = true;
-            $missingProperty = 'earnings';
-        }
-        if (! $throwException && is_null($this->getIncidentCode())) {
-            $throwException = true;
-            $missingProperty = 'incidentCode';
-        }
-
-        if ($throwException) {
-            throw new MissingPropertyException(sprintf("Missing property %s", $missingProperty));
-        }
-    }
-
-    /**
      * @return string
      */
     public function toLine()
     {
-        $this->checkProperties();
-
         $line = (string) self::RECORD_TYPE;
-        $line .= str_pad($this->getCinemaTheatreCode(), 12, ' ');
-        $line .= $this->getDatetime()->format('dmy');
-        $line .= $this->getDatetime()->format('Hi');
-        $line .= str_pad((string) $this->getFilmsQty(), 2, '0', STR_PAD_LEFT);
-        $line .= str_pad((string) $this->getTicketsQty(), 5, '0', STR_PAD_LEFT);
-        $line .= str_pad(
-            (string) number_format($this->getEarnings(), 2, '.', ''),
-            8,
-            '0',
-            STR_PAD_LEFT
-        );
+        $line .= Stringy::create($this->getCinemaTheatreCode())->padRight(12, ' ');
+        $line .= $this->getOccurredOn()->format('dmy');
+        $line .= $this->getOccurredOn()->format('Hi');
+        $line .= Stringy::create((string) $this->getFilmsQty())->padLeft(2, '0');
+        $line .= Stringy::create((string) $this->getTicketsQty())->padLeft(5, '0');
+        $line .= Stringy::create(number_format($this->getEarnings(), 2, '.', ''))
+            ->padLeft(8, '0');
         $line .= $this->getIncidentCode();
 
         return $line;
@@ -219,19 +205,27 @@ class Session implements RecordInterface
 
     /**
      * @param string $line
-     * @return \NumaxLab\Icaa\Records\Session
+     * @return Session
      */
     public static function fromLine($line)
     {
-        $self = new self();
+        $cinemaTheatreCode = (string) Stringy::create($line)->substr(1, 12)->trimRight();
+        $occurredOn = Carbon::createFromFormat(
+            'dmyHi',
+            (string) Stringy::create($line)->substr(13, 10)
+        );
+        $filmsQty = (int)(string) Stringy::create($line)->substr(23, 2)->trimLeft('0');
+        $ticketsQty = (int)(string) Stringy::create($line)->substr(25, 5)->trimLeft('0');
+        $earnings = (float)(string) Stringy::create($line)->substr(30, 8)->trimLeft('0');
+        $incidentCode = (string) Stringy::create($line)->substr(38, 3);
 
-        $self->setCinemaTheatreCode(rtrim(substr($line, 1, 12)));
-        $self->setDatetime(Carbon::createFromFormat('dmyHi', substr($line, 13, 10)));
-        $self->setFilmsQty((int) ltrim(substr($line, 23, 2), '0'));
-        $self->setTicketsQty((int) ltrim(substr($line, 25, 5), '0'));
-        $self->setEarnings((float) ltrim(substr($line, 30, 8), '0'));
-        $self->setIncidentCode(substr($line, 38, 3));
-
-        return $self;
+        return new self(
+            $cinemaTheatreCode,
+            $occurredOn,
+            $filmsQty,
+            $ticketsQty,
+            $earnings,
+            $incidentCode
+        );
     }
 }

@@ -2,9 +2,9 @@
 
 namespace NumaxLab\Icaa\Records;
 
-
+use Assert\Assert;
 use Carbon\Carbon;
-use NumaxLab\Icaa\Exceptions\MissingPropertyException;
+use Stringy\Stringy;
 
 class SessionScheduling implements RecordInterface
 {
@@ -16,9 +16,9 @@ class SessionScheduling implements RecordInterface
     private $cinemaTheatreCode;
 
     /**
-     * @var \Carbon\Carbon
+     * @var Carbon
      */
-    private $sessionDatetime;
+    private $sessionOccurredOn;
 
     /**
      * @var int
@@ -27,40 +27,47 @@ class SessionScheduling implements RecordInterface
 
     /**
      * SessionScheduling constructor.
+     * @param string $cinemaTheatreCode
+     * @param Carbon $sessionOccurredOn
+     * @param int $sessionsQty
      */
-    public function __construct()
+    public function __construct($cinemaTheatreCode, Carbon $sessionOccurredOn, $sessionsQty)
     {
-        //
+        $this->setCinemaTheatreCode($cinemaTheatreCode);
+        $this->setSessionOccurredOn($sessionOccurredOn);
+        $this->setSessionsQty($sessionsQty);
     }
 
     /**
      * @param string $cinemaTheatreCode
-     * @return SessionScheduling
      */
-    public function setCinemaTheatreCode($cinemaTheatreCode)
+    private function setCinemaTheatreCode($cinemaTheatreCode)
     {
+        Assert::that($cinemaTheatreCode)
+            ->notEmpty()
+            ->length(6);
+
         $this->cinemaTheatreCode = $cinemaTheatreCode;
-        return $this;
     }
 
     /**
-     * @param \Carbon\Carbon $sessionDatetime
-     * @return SessionScheduling
+     * @param Carbon $sessionOccurredOn
      */
-    public function setSessionDatetime($sessionDatetime)
+    private function setSessionOccurredOn(Carbon $sessionOccurredOn)
     {
-        $this->sessionDatetime = $sessionDatetime;
-        return $this;
+        $this->sessionOccurredOn = $sessionOccurredOn;
     }
 
     /**
      * @param int $sessionsQty
-     * @return SessionScheduling
      */
-    public function setSessionsQty($sessionsQty)
+    private function setSessionsQty($sessionsQty)
     {
+        Assert::that($sessionsQty)
+            ->integer()
+            ->greaterOrEqualThan(0);
+
         $this->sessionsQty = $sessionsQty;
-        return $this;
     }
 
     /**
@@ -72,11 +79,11 @@ class SessionScheduling implements RecordInterface
     }
 
     /**
-     * @return \Carbon\Carbon
+     * @return Carbon
      */
-    public function getSessionDatetime()
+    public function getSessionOccurredOn()
     {
-        return $this->sessionDatetime;
+        return $this->sessionOccurredOn;
     }
 
     /**
@@ -88,58 +95,35 @@ class SessionScheduling implements RecordInterface
     }
 
     /**
-     * @throws \NumaxLab\Icaa\Exceptions\MissingPropertyException
-     */
-    private function checkProperties()
-    {
-        $throwException = false;
-        $missingProperty = '';
-
-        if (is_null($this->getCinemaTheatreCode())) {
-            $throwException = true;
-            $missingProperty = 'cinemaTheatreCode';
-        }
-        if (! $throwException && is_null($this->getSessionDatetime())) {
-            $throwException = true;
-            $missingProperty = 'sessionDatetime';
-        }
-        if (! $throwException && is_null($this->getSessionsQty())) {
-            $throwException = true;
-            $missingProperty = 'sessionsQty';
-        }
-
-        if ($throwException) {
-            throw new MissingPropertyException(sprintf("Missing property %s", $missingProperty));
-        }
-    }
-
-    /**
      * @return string
      */
     public function toLine()
     {
-        $this->checkProperties();
-
         $line = (string) self::RECORD_TYPE;
-        $line .= str_pad($this->getCinemaTheatreCode(), 12, ' ');
-        $line .= $this->getSessionDatetime()->format('dmy');
-        $line .= str_pad((string) $this->getSessionsQty(), 2, '0');
+        $line .= Stringy::create($this->getCinemaTheatreCode())->padRight(12, ' ');
+        $line .= $this->getSessionOccurredOn()->format('dmy');
+        $line .= Stringy::create($this->getSessionsQty())->padLeft(2, '0');
 
         return $line;
     }
 
     /**
      * @param string $line
-     * @return \NumaxLab\Icaa\Records\SessionScheduling
+     * @return SessionScheduling
      */
     public static function fromLine($line)
     {
-        $self = new self();
+        $cinemaTheatreCode = (string) Stringy::create($line)->substr(1, 12)->trimRight();
+        $sessionOccurredOn = Carbon::createFromFormat(
+            'dmy',
+            (string) Stringy::create($line)->substr(13, 6)
+        );
+        $sessionsQty = (string) Stringy::create($line)->substr(19, 2)->trimLeft('0');
 
-        $self->setCinemaTheatreCode(rtrim(substr($line, 1, 12)));
-        $self->setSessionDatetime(Carbon::createFromFormat('dmy', substr($line, 13, 6)));
-        $self->setSessionsQty((int) ltrim(substr($line, 19, 2), '0'));
-
-        return $self;
+        return new self(
+            $cinemaTheatreCode,
+            $sessionOccurredOn,
+            $sessionsQty
+        );
     }
 }

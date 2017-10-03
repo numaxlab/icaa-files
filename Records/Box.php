@@ -2,9 +2,9 @@
 
 namespace NumaxLab\Icaa\Records;
 
+use Assert\Assert;
+use Assert\Assertion;
 use Carbon\Carbon;
-use NumaxLab\Icaa\Exceptions\InvalidFormatException;
-use NumaxLab\Icaa\Exceptions\MissingPropertyException;
 use Stringy\Stringy;
 
 class Box implements RecordInterface
@@ -24,12 +24,12 @@ class Box implements RecordInterface
     private $fileType;
 
     /**
-     * @var \Carbon\Carbon
+     * @var Carbon
      */
     private $lastScheduledFileSentAt;
 
     /**
-     * @var \Carbon\Carbon
+     * @var Carbon
      */
     private $currentFileSentAt;
 
@@ -55,59 +55,75 @@ class Box implements RecordInterface
 
     /**
      * Box constructor.
-     * @param $fileType
+     * @param string $fileType
+     * @param string $code
+     * @param Carbon $lastScheduledFileSentAt
+     * @param Carbon $currentFileSentAt
      */
-    public function __construct($fileType)
+    public function __construct(
+        $fileType,
+        $code,
+        Carbon $lastScheduledFileSentAt,
+        Carbon $currentFileSentAt
+    )
     {
-        switch ($fileType) {
-            case self::FILE_TYPE_REGULAR:
-            case self::FILE_TYPE_DELAYED:
-                $this->fileType = $fileType;
-                break;
-            default:
-                throw new InvalidFormatException("The file type must be one of the valid constants: FILE_TYPE_REGULAR, FILE_TYPE_DELAYED");
-                break;
-        }
+        $this->setFileType($fileType);
+        $this->setCode($code);
+        $this->setLastScheduledFileSentAt($lastScheduledFileSentAt);
+        $this->setCurrentFileSentAt($currentFileSentAt);
+        $this->setFileLinesQty(0);
+        $this->setSessionsQty(0);
+        $this->setTicketsQty(0);
+        $this->setEarnings(0.0);
     }
 
     /**
      * @param string $code
-     * @return \NumaxLab\Icaa\Records\Box
      */
-    public function setCode($code)
+    private function setCode($code)
     {
+        Assert::that($code)
+            ->notEmpty()
+            ->length(3);
+
         $this->code = $code;
-        return $this;
     }
 
     /**
      * @param $fileType
-     * @return $this
      */
-    protected function setFileType($fileType)
+    private function setFileType($fileType)
     {
+        Assertion::inArray(
+            $fileType,
+            [
+                self::FILE_TYPE_REGULAR,
+                self::FILE_TYPE_DELAYED
+            ]
+        );
+
         $this->fileType = $fileType;
-        return $this;
     }
 
     /**
-     * @param \Carbon\Carbon $lastScheduledFileSentAt
-     * @return Box
+     * @param Carbon $lastScheduledFileSentAt
      */
-    public function setLastScheduledFileSentAt(Carbon $lastScheduledFileSentAt)
+    private function setLastScheduledFileSentAt(Carbon $lastScheduledFileSentAt)
     {
         $this->lastScheduledFileSentAt = $lastScheduledFileSentAt;
-        return $this;
     }
 
     /**
-     * @param \Carbon\Carbon $currentFileSentAt
-     * @return Box
+     * @param Carbon $currentFileSentAt
      */
-    public function setCurrentFileSentAt(Carbon $currentFileSentAt)
+    private function setCurrentFileSentAt(Carbon $currentFileSentAt)
     {
+        Assertion::greaterOrEqualThan(
+            $currentFileSentAt->getTimestamp(),
+            $this->getLastScheduledFileSentAt()->getTimestamp()
+        );
+
         $this->currentFileSentAt = $currentFileSentAt;
-        return $this;
     }
 
     /**
@@ -116,6 +132,8 @@ class Box implements RecordInterface
      */
     public function setFileLinesQty($fileLinesQty)
     {
+        Assertion::integer($fileLinesQty);
+
         $this->fileLinesQty = $fileLinesQty;
         return $this;
     }
@@ -126,6 +144,8 @@ class Box implements RecordInterface
      */
     public function setSessionsQty($sessionsQty)
     {
+        Assertion::integer($sessionsQty);
+
         $this->sessionsQty = $sessionsQty;
         return $this;
     }
@@ -136,6 +156,8 @@ class Box implements RecordInterface
      */
     public function setTicketsQty($ticketsQty)
     {
+        Assertion::integer($ticketsQty);
+
         $this->ticketsQty = $ticketsQty;
         return $this;
     }
@@ -146,6 +168,8 @@ class Box implements RecordInterface
      */
     public function setEarnings($earnings)
     {
+        Assertion::float($earnings);
+
         $this->earnings = $earnings;
         return $this;
     }
@@ -167,7 +191,7 @@ class Box implements RecordInterface
     }
 
     /**
-     * @return \Carbon\Carbon
+     * @return Carbon
      */
     public function getLastScheduledFileSentAt()
     {
@@ -175,7 +199,7 @@ class Box implements RecordInterface
     }
 
     /**
-     * @return \Carbon\Carbon
+     * @return Carbon
      */
     public function getCurrentFileSentAt()
     {
@@ -215,54 +239,10 @@ class Box implements RecordInterface
     }
 
     /**
-     * @throws \NumaxLab\Icaa\Exceptions\MissingPropertyException
-     */
-    private function checkProperties()
-    {
-        $throwException = false;
-        $missingProperty = '';
-
-        if (is_null($this->getCode())) {
-            $throwException = true;
-            $missingProperty = 'code';
-        }
-        if (! $throwException && is_null($this->getLastScheduledFileSentAt())) {
-            $throwException = true;
-            $missingProperty = 'lastScheduledFileSentAt';
-        }
-        if (! $throwException && is_null($this->getCurrentFileSentAt())) {
-            $throwException = true;
-            $missingProperty = 'currentFileSentAt';
-        }
-        if (! $throwException && is_null($this->getFileLinesQty())) {
-            $throwException = true;
-            $missingProperty = 'fileLinesQty';
-        }
-        if (! $throwException && is_null($this->getSessionsQty())) {
-            $throwException = true;
-            $missingProperty = 'sessionsQty';
-        }
-        if (! $throwException && is_null($this->getTicketsQty())) {
-            $throwException = true;
-            $missingProperty = 'ticketsQty';
-        }
-        if (! $throwException && is_null($this->getEarnings())) {
-            $throwException = true;
-            $missingProperty = 'earnings';
-        }
-
-        if ($throwException) {
-            throw new MissingPropertyException(sprintf("Missing property %s", $missingProperty));
-        }
-    }
-
-    /**
      * @return string
      */
     public function toLine()
     {
-        $this->checkProperties();
-
         $firstDayOfYear = Carbon::createFromDate(Carbon::now()->year, 1, 1);
 
         $line = (string) self::RECORD_TYPE;
@@ -283,24 +263,29 @@ class Box implements RecordInterface
 
     /**
      * @param string $line
-     * @return \NumaxLab\Icaa\Records\Box
+     * @return Box
      */
     public static function fromLine($line)
     {
         $firstDayOfYear = Carbon::createFromDate(Carbon::now()->year, 1, 1);
 
-        $self = new self(self::FILE_TYPE_REGULAR);
-
-        $self->setCode((string) Stringy::create($line)->substr(1, 3));
-        $self->setFileType((string) Stringy::create($line)->substr(3, 2));
+        $code = (string) Stringy::create($line)->substr(1, 3);
+        $fileType = (string) Stringy::create($line)->substr(3, 2);
 
         $lastScheduledFileSentAtJulianDay = (int)(string) Stringy::create($line)->substr(6, 3)
             ->trimLeft('0');
-        $self->setLastScheduledFileSentAt(clone $firstDayOfYear->addDays($lastScheduledFileSentAtJulianDay));
+        $lastScheduledFileSentAt = clone $firstDayOfYear->addDays($lastScheduledFileSentAtJulianDay);
 
         $currentFileSentAtJulianDay = (int)(string) Stringy::create($line)->substr(9, 3)
             ->trimLeft('0');
-        $self->setCurrentFileSentAt(clone $firstDayOfYear->addDays($currentFileSentAtJulianDay));
+        $currentFileSentAt = clone $firstDayOfYear->addDays($currentFileSentAtJulianDay);
+
+        $self = new self(
+            $fileType,
+            $code,
+            $lastScheduledFileSentAt,
+            $currentFileSentAt
+        );
 
         $self->setFileLinesQty((int)(string) Stringy::create($line)->substr(12, 11)->trimLeft('0'));
         $self->setSessionsQty((int)(string) Stringy::create($line)->substr(23, 11)->trimLeft('0'));

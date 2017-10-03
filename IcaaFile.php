@@ -13,32 +13,32 @@ use NumaxLab\Icaa\Records\SessionScheduling;
 class IcaaFile
 {
     /**
-     * @var \NumaxLab\Icaa\Records\Box
+     * @var Box
      */
     private $box;
 
     /**
-     * @var \NumaxLab\Icaa\Records\Collection
+     * @var Collection
      */
     private $cinemaTheatres;
 
     /**
-     * @var \NumaxLab\Icaa\Records\Collection
+     * @var Collection
      */
     private $sessions;
 
     /**
-     * @var \NumaxLab\Icaa\Records\Collection
+     * @var Collection
      */
     private $sessionsFilms;
 
     /**
-     * @var \NumaxLab\Icaa\Records\Collection
+     * @var Collection
      */
     private $films;
 
     /**
-     * @var \NumaxLab\Icaa\Records\Collection
+     * @var Collection
      */
     private $sessionsScheduling;
 
@@ -55,7 +55,7 @@ class IcaaFile
     }
 
     /**
-     * @param \NumaxLab\Icaa\Records\Box $box
+     * @param Box $box
      * @return IcaaFile
      */
     public function setBox(Box $box)
@@ -115,7 +115,7 @@ class IcaaFile
     }
 
     /**
-     * @return \NumaxLab\Icaa\Records\Box
+     * @return Box
      */
     public function getBox()
     {
@@ -123,7 +123,7 @@ class IcaaFile
     }
 
     /**
-     * @return \NumaxLab\Icaa\Records\Collection
+     * @return Collection
      */
     public function getCinemaTheatres()
     {
@@ -131,7 +131,7 @@ class IcaaFile
     }
 
     /**
-     * @return \NumaxLab\Icaa\Records\Collection
+     * @return Collection
      */
     public function getSessions()
     {
@@ -139,7 +139,7 @@ class IcaaFile
     }
 
     /**
-     * @return \NumaxLab\Icaa\Records\Collection
+     * @return Collection
      */
     public function getSessionsFilms()
     {
@@ -147,7 +147,7 @@ class IcaaFile
     }
 
     /**
-     * @return \NumaxLab\Icaa\Records\Collection
+     * @return Collection
      */
     public function getFilms()
     {
@@ -155,7 +155,7 @@ class IcaaFile
     }
 
     /**
-     * @return \NumaxLab\Icaa\Records\Collection
+     * @return Collection
      */
     public function getSessionsScheduling()
     {

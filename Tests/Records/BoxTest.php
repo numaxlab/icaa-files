@@ -3,6 +3,7 @@
 namespace NumaxLab\Icaa\Tests\Records;
 
 use Carbon\Carbon;
+use InvalidArgumentException;
 use NumaxLab\Icaa\Exceptions\InvalidFormatException;
 use NumaxLab\Icaa\Exceptions\MissingPropertyException;
 use NumaxLab\Icaa\Records\Box;
@@ -12,48 +13,28 @@ use Stringy\Stringy;
 
 class BoxTest extends TestCase
 {
-    /**
-     * @var \NumaxLab\Icaa\Records\Box
-     */
-    protected $sut;
-
-    protected function setUp()
-    {
-        parent::setUp();
-
-        $this->sut = new Box(Box::FILE_TYPE_REGULAR);
-    }
-
-    protected function tearDown()
-    {
-        parent::tearDown();
-
-        $this->sut = null;
-    }
-
     public function testImplementsRecordInterface()
     {
-        $this->assertInstanceOf(RecordInterface::class, $this->sut);
-    }
+        $box = new Box(
+            Box::FILE_TYPE_REGULAR,
+            '123',
+            Carbon::now()->subDays(7),
+            Carbon::now()
+        );
 
-    public function testThrowsExceptionWhenMissingProperties()
-    {
-        $this->expectException(MissingPropertyException::class);
-
-        $this->sut->toLine();
+        $this->assertInstanceOf(RecordInterface::class, $box);
     }
 
     public function testConvertsToLine()
     {
-        $this->sut->setCode('123')
-            ->setLastScheduledFileSentAt(Carbon::now()->subDays(7))
-            ->setCurrentFileSentAt(Carbon::now())
-            ->setFileLinesQty(10)
-            ->setSessionsQty(2)
-            ->setTicketsQty(100)
-            ->setEarnings(2050.50);
+        $box = new Box(
+            Box::FILE_TYPE_REGULAR,
+            '123',
+            Carbon::now()->subDays(7),
+            Carbon::now()
+        );
 
-        $line = $this->sut->toLine();
+        $line = $box->toLine();
 
         $this->assertInternalType('string', $line);
         $this->assertEquals(56, Stringy::create($line)->length());
@@ -61,8 +42,13 @@ class BoxTest extends TestCase
 
     public function testThrowsExceptionWhenInvalidFileType()
     {
-        $this->expectException(InvalidFormatException::class);
+        $this->expectException(InvalidArgumentException::class);
 
-        new Box('AB');
+        new Box(
+            'AB',
+            '123',
+            Carbon::now()->subDays(7),
+            Carbon::now()
+        );
     }
 }
