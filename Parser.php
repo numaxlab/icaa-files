@@ -18,7 +18,7 @@ class Parser
     private $endOfLine;
 
     /**
-     * @var \NumaxLab\Icaa\IcaaFile
+     * @var IcaaFile
      */
     private $file;
 
@@ -37,7 +37,7 @@ class Parser
     /**
      * Parser constructor.
      * @param string $eol
-     * @param \NumaxLab\Icaa\IcaaFile $file
+     * @param IcaaFile $file
      */
     public function __construct($eol, IcaaFile $file)
     {
@@ -47,8 +47,8 @@ class Parser
 
     /**
      * @param $input
-     * @return \NumaxLab\Icaa\IcaaFile
-     * @throws \NumaxLab\Icaa\Exceptions\ParserException
+     * @return IcaaFile
+     * @throws ParserException
      */
     public function parse($input)
     {
