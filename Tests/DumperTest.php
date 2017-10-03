@@ -4,7 +4,6 @@ namespace NumaxLab\Icaa\Tests\Records;
 
 use Mockery;
 use NumaxLab\Icaa\Dumper;
-use NumaxLab\Icaa\Exceptions\MissingPropertyException;
 use NumaxLab\Icaa\IcaaFile;
 use NumaxLab\Icaa\Records\Box;
 use NumaxLab\Icaa\Records\CinemaTheatre;
@@ -33,22 +32,22 @@ class DumperTest extends TestCase
 
         $this->fileMock = Mockery::mock(IcaaFile::class);
 
-        $this->fileMock->shouldReceive('getBox')
+        $this->fileMock->shouldReceive('box')
             ->andReturn(null);
 
-        $this->fileMock->shouldReceive('getCinemaTheatres')
+        $this->fileMock->shouldReceive('cinemaTheatres')
             ->andReturn(new Collection());
 
-        $this->fileMock->shouldReceive('getSessions')
+        $this->fileMock->shouldReceive('sessions')
             ->andReturn(new Collection());
 
-        $this->fileMock->shouldReceive('getSessionsFilms')
+        $this->fileMock->shouldReceive('sessionsFilms')
             ->andReturn(new Collection());
 
-        $this->fileMock->shouldReceive('getFilms')
+        $this->fileMock->shouldReceive('films')
             ->andReturn(new Collection());
 
-        $this->fileMock->shouldReceive('getSessionsScheduling')
+        $this->fileMock->shouldReceive('sessionsScheduling')
             ->andReturn(new Collection());
 
         $this->sut = new Dumper(PHP_EOL, $this->fileMock);
@@ -61,13 +60,6 @@ class DumperTest extends TestCase
         $this->sut = null;
 
         Mockery::close();
-    }
-
-    public function testThrowsExceptionWhenMissingProperties()
-    {
-        $this->expectException(MissingPropertyException::class);
-
-        $this->sut->dump();
     }
 
     public function testDumpsString()
@@ -123,28 +115,22 @@ class DumperTest extends TestCase
 
         $this->fileMock = Mockery::mock(IcaaFile::class);
 
-        $this->fileMock->shouldReceive('getBox')
-            ->twice()
+        $this->fileMock->shouldReceive('box')
             ->andReturn($boxDouble);
 
-        $this->fileMock->shouldReceive('getCinemaTheatres')
-            ->twice()
+        $this->fileMock->shouldReceive('cinemaTheatres')
             ->andReturn(new Collection([$cinemaTheatreDouble]));
 
-        $this->fileMock->shouldReceive('getSessions')
-            ->twice()
+        $this->fileMock->shouldReceive('sessions')
             ->andReturn(new Collection([$sessionDouble]));
 
-        $this->fileMock->shouldReceive('getSessionsFilms')
-            ->twice()
+        $this->fileMock->shouldReceive('sessionsFilms')
             ->andReturn(new Collection([$sessionFilmDouble]));
 
-        $this->fileMock->shouldReceive('getFilms')
-            ->twice()
+        $this->fileMock->shouldReceive('films')
             ->andReturn(new Collection([$filmDouble]));
 
-        $this->fileMock->shouldReceive('getSessionsScheduling')
-            ->twice()
+        $this->fileMock->shouldReceive('sessionsScheduling')
             ->andReturn(new Collection([$sessionSchedulingDouble]));
     }
 }

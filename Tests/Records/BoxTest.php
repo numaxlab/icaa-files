@@ -4,8 +4,6 @@ namespace NumaxLab\Icaa\Tests\Records;
 
 use Carbon\Carbon;
 use InvalidArgumentException;
-use NumaxLab\Icaa\Exceptions\InvalidFormatException;
-use NumaxLab\Icaa\Exceptions\MissingPropertyException;
 use NumaxLab\Icaa\Records\Box;
 use NumaxLab\Icaa\Records\RecordInterface;
 use PHPUnit\Framework\TestCase;

@@ -2,6 +2,8 @@
 
 namespace NumaxLab\Icaa;
 
+use Assert\Assertion;
+use InvalidArgumentException;
 use NumaxLab\Icaa\Records\Box;
 use NumaxLab\Icaa\Records\CinemaTheatre;
 use NumaxLab\Icaa\Records\Collection;
@@ -65,7 +67,7 @@ class IcaaFile
     }
 
     /**
-     * @param \NumaxLab\Icaa\Records\CinemaTheatre $cinemaTheatre
+     * @param CinemaTheatre $cinemaTheatre
      * @return IcaaFile
      */
     public function addCinemaTheatre(CinemaTheatre $cinemaTheatre)
@@ -75,7 +77,7 @@ class IcaaFile
     }
 
     /**
-     * @param \NumaxLab\Icaa\Records\Session $session
+     * @param Session $session
      * @return IcaaFile
      */
     public function addSession(Session $session)
@@ -85,7 +87,7 @@ class IcaaFile
     }
 
     /**
-     * @param \NumaxLab\Icaa\Records\SessionFilm $sessionFilm
+     * @param SessionFilm $sessionFilm
      * @return IcaaFile
      */
     public function addSessionFilm(SessionFilm $sessionFilm)
@@ -95,7 +97,7 @@ class IcaaFile
     }
 
     /**
-     * @param \NumaxLab\Icaa\Records\Film $film
+     * @param Film $film
      * @return IcaaFile
      */
     public function addFilm(Film $film)
@@ -105,7 +107,7 @@ class IcaaFile
     }
 
     /**
-     * @param \NumaxLab\Icaa\Records\SessionScheduling $sessionScheduling
+     * @param SessionScheduling $sessionScheduling
      * @return IcaaFile
      */
     public function addSessionScheduling(SessionScheduling $sessionScheduling)
@@ -117,7 +119,7 @@ class IcaaFile
     /**
      * @return Box
      */
-    public function getBox()
+    public function box()
     {
         return $this->box;
     }
@@ -125,7 +127,7 @@ class IcaaFile
     /**
      * @return Collection
      */
-    public function getCinemaTheatres()
+    public function cinemaTheatres()
     {
         return $this->cinemaTheatres;
     }
@@ -133,7 +135,7 @@ class IcaaFile
     /**
      * @return Collection
      */
-    public function getSessions()
+    public function sessions()
     {
         return $this->sessions;
     }
@@ -141,7 +143,7 @@ class IcaaFile
     /**
      * @return Collection
      */
-    public function getSessionsFilms()
+    public function sessionsFilms()
     {
         return $this->sessionsFilms;
     }
@@ -149,7 +151,7 @@ class IcaaFile
     /**
      * @return Collection
      */
-    public function getFilms()
+    public function films()
     {
         return $this->films;
     }
@@ -157,7 +159,7 @@ class IcaaFile
     /**
      * @return Collection
      */
-    public function getSessionsScheduling()
+    public function sessionsScheduling()
     {
         return $this->sessionsScheduling;
     }
@@ -165,7 +167,7 @@ class IcaaFile
     /**
      * @param $input
      * @param string $eol
-     * @return \NumaxLab\Icaa\IcaaFile
+     * @return IcaaFile
      */
     public static function parse($input, $eol = PHP_EOL)
     {
@@ -180,8 +182,50 @@ class IcaaFile
      */
     public function dump($eol = PHP_EOL)
     {
+        $this->assertProperties();
+
+        $this->updateBoxWithFinalCounts();
+
         $dumper = new Dumper($eol, $this);
 
         return $dumper->dump();
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     */
+    private function assertProperties()
+    {
+        Assertion::notEmpty($this->box());
+        Assertion::greaterThan($this->cinemaTheatres()->count(), 0);
+        Assertion::greaterThan($this->sessions()->count(), 0);
+        Assertion::greaterThan($this->sessionsFilms()->count(), 0);
+        Assertion::greaterThan($this->films()->count(), 0);
+        Assertion::greaterThan($this->sessionsScheduling()->count(), 0);
+    }
+
+    /**
+     *
+     */
+    private function updateBoxWithFinalCounts()
+    {
+        $fileLinesQty = 1 + $this->cinemaTheatres()->count() +
+            $this->sessions()->count() + $this->sessionsFilms()->count() +
+            $this->films()->count() + $this->sessionsScheduling();
+
+        $sessionsQty = $this->sessions()->count();
+
+        $ticketsQty = 0;
+        $earnings = 0;
+        /** @var Session $session */
+        foreach ($this->sessions() as $session) {
+            $ticketsQty += $session->getTicketsQty();
+            $earnings += $session->getEarnings();
+        }
+
+        $this->box()->setFileLinesQty($fileLinesQty);
+        $this->box()->setSessionsQty($sessionsQty);
+        $this->box()->setTicketsQty($ticketsQty);
+        $this->box()->setEarnings($earnings);
     }
 }
