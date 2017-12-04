@@ -187,7 +187,7 @@ class Film implements RecordInterface
      */
     private function setCaptionsLangCode($captionsLangCode)
     {
-        Assertion::notEmpty($captionsLangCode);
+        Assertion::notBlank($captionsLangCode);
 
         $this->captionsLangCode = $captionsLangCode;
     }
@@ -197,7 +197,7 @@ class Film implements RecordInterface
      */
     private function setProjectionFormatCode($projectionFormatCode)
     {
-        Assertion::notEmpty($projectionFormatCode);
+        Assertion::notBlank($projectionFormatCode);
 
         $this->projectionFormatCode = $projectionFormatCode;
     }
