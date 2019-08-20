@@ -62,6 +62,8 @@ class Dumper
             }
         }
 
-        return $dump;
+        $encodedString = iconv(mb_detect_encoding($dump), 'Windows-1252//TRANSLIT', $dump);
+
+        return $encodedString;
     }
 }

@@ -14,6 +14,8 @@ use NumaxLab\Icaa\Records\SessionScheduling;
 
 class IcaaFile
 {
+    const EOL = "\r\n";
+
     /**
      * @var Box
      */
@@ -46,6 +48,7 @@ class IcaaFile
 
     /**
      * IcaaFile constructor.
+     * @throws Exceptions\RecordsCollectionException
      */
     public function __construct()
     {
@@ -168,8 +171,10 @@ class IcaaFile
      * @param $input
      * @param string $eol
      * @return IcaaFile
+     * @throws Exceptions\ParserException
+     * @throws Exceptions\RecordsCollectionException
      */
-    public static function parse($input, $eol = PHP_EOL)
+    public static function parse($input, $eol = self::EOL)
     {
         $parser = new Parser($eol, new self());
 
@@ -179,8 +184,9 @@ class IcaaFile
     /**
      * @param string $eol
      * @return string
+     * @throws \Assert\AssertionFailedException
      */
-    public function dump($eol = PHP_EOL)
+    public function dump($eol = self::EOL)
     {
         $this->assertProperties();
 
@@ -193,6 +199,7 @@ class IcaaFile
 
     /**
      * @throws InvalidArgumentException
+     * @throws \Assert\AssertionFailedException
      */
     private function assertProperties()
     {
