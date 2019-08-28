@@ -50,7 +50,7 @@ class DumperTest extends TestCase
         $this->fileMock->shouldReceive('sessionsScheduling')
             ->andReturn(new Collection());
 
-        $this->sut = new Dumper(PHP_EOL, $this->fileMock);
+        $this->sut = new Dumper(IcaaFile::EOL, $this->fileMock);
     }
 
     protected function tearDown()
@@ -66,13 +66,13 @@ class DumperTest extends TestCase
     {
         $this->prepareIcaaFileMock();
 
-        $this->sut = new Dumper(PHP_EOL, $this->fileMock);
+        $this->sut = new Dumper(IcaaFile::EOL, $this->fileMock);
 
-        $dumpResult = 'testbox'.PHP_EOL.
-            'testcinematheatre'.PHP_EOL.
-            'testsession'.PHP_EOL.
-            'testsessionfilm'.PHP_EOL.
-            'testfilm'.PHP_EOL.
+        $dumpResult = 'testbox'.IcaaFile::EOL.
+            'testcinematheatre'.IcaaFile::EOL.
+            'testsession'.IcaaFile::EOL.
+            'testsessionfilm'.IcaaFile::EOL.
+            'testfilm'.IcaaFile::EOL.
             'testsessionscheduling';
 
         $dump = $this->sut->dump();

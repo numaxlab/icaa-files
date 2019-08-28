@@ -1,3 +1,4 @@
 vendor/
+Tests/key.pkr
 composer.lock
 phpunit.xml

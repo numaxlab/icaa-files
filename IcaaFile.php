@@ -47,16 +47,24 @@ class IcaaFile
     private $sessionsScheduling;
 
     /**
+     * @var string
+     */
+    private $encryptionKey;
+
+    /**
      * IcaaFile constructor.
+     * @param null|string $encryptionKey
      * @throws Exceptions\RecordsCollectionException
      */
-    public function __construct()
+    public function __construct($encryptionKey = null)
     {
         $this->cinemaTheatres = new Collection();
         $this->sessions = new Collection();
         $this->sessionsFilms = new Collection();
         $this->films = new Collection();
         $this->sessionsScheduling = new Collection();
+
+        $this->encryptionKey = $encryptionKey;
     }
 
     /**
@@ -195,6 +203,17 @@ class IcaaFile
         $dumper = new Dumper($eol, $this);
 
         return $dumper->dump();
+    }
+
+    /**
+     * @param string $input
+     * @return string
+     */
+    public function encrypt($input)
+    {
+        $encrypter = new Encrypter($this->encryptionKey);
+
+        return $encrypter->encrypt($input);
     }
 
     /**
