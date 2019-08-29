@@ -28,9 +28,7 @@ class EncrypterTest extends TestCase
     {
         $toEncrypt = "test";
 
-        $encripted = $this->sut->encrypt($toEncrypt);
-
-        var_dump($encripted);
+        $encrypted = $this->sut->encrypt($toEncrypt);
 
         $this->assertTrue(true);
     }
