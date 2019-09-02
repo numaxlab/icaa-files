@@ -21,7 +21,7 @@ class EncrypterTest extends TestCase
     {
         parent::setUp();
 
-        $this->sut = new Encrypter(file_get_contents('./Tests/key.pkr'));
+        $this->sut = new Encrypter(file_get_contents('./Tests/key.pkr'), 'test');
     }
 
     public function testEncryptsString()

@@ -49,14 +49,20 @@ class IcaaFile
     /**
      * @var string
      */
-    private $encryptionKey;
+    private $encryptionKeyData;
+
+    /**
+     * @var string
+     */
+    private $encryptKeyFingerprint;
 
     /**
      * IcaaFile constructor.
-     * @param null|string $encryptionKey
+     * @param null|string $encryptionKeyData
+     * @param null|string $encryptKeyFingerprint
      * @throws Exceptions\RecordsCollectionException
      */
-    public function __construct($encryptionKey = null)
+    public function __construct($encryptionKeyData = null, $encryptKeyFingerprint = null)
     {
         $this->cinemaTheatres = new Collection();
         $this->sessions = new Collection();
@@ -64,7 +70,8 @@ class IcaaFile
         $this->films = new Collection();
         $this->sessionsScheduling = new Collection();
 
-        $this->encryptionKey = $encryptionKey;
+        $this->encryptionKeyData = $encryptionKeyData;
+        $this->encryptKeyFingerprint = $encryptKeyFingerprint;
     }
 
     /**
@@ -211,7 +218,7 @@ class IcaaFile
      */
     public function encrypt($input)
     {
-        $encrypter = new Encrypter($this->encryptionKey);
+        $encrypter = new Encrypter($this->encryptionKeyData, $this->encryptKeyFingerprint);
 
         return $encrypter->encrypt($input);
     }
