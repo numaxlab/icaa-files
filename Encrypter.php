@@ -18,10 +18,7 @@ class Encrypter
      */
     public function __construct($encryptionKeyData, $encryptKeyFingerprint)
     {
-        putenv("GNUPGHOME=/tmp");
-
         $gpg = new gnupg();
-        $gpg->setsignmode(GNUPG_SIG_MODE_CLEAR);
         $gpg->seterrormode(GNUPG_ERROR_EXCEPTION);
 
         $gpg->import($encryptionKeyData);
