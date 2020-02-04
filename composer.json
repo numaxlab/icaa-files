@@ -10,7 +10,7 @@
     ],
     "require": {
         "php": ">=7.1.0",
-        "nesbot/carbon": "^2.0.0",
+        "nesbot/carbon": "^1.22",
         "danielstjules/stringy": "~1.8",
         "beberlei/assert": "^2.7"
     },
