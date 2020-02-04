@@ -31,7 +31,7 @@ class Dumper implements DumperInterface
     /**
      * @return string
      */
-    public function dump()
+    public function dump(): string
     {
         $dump = $this->file->header()->toLine().$this->endOfLine;
 

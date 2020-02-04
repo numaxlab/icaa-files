@@ -4,11 +4,11 @@ namespace NumaxLab\Icaa\Files\Earnings;
 
 use NumaxLab\Icaa\Files\DumperInterface;
 use NumaxLab\Icaa\EarningsFile;
-use NumaxLab\Icaa\Records\CinemaTheatre;
-use NumaxLab\Icaa\Records\Film;
-use NumaxLab\Icaa\Records\Session;
-use NumaxLab\Icaa\Records\SessionFilm;
-use NumaxLab\Icaa\Records\SessionScheduling;
+use NumaxLab\Icaa\Records\Earnings\CinemaTheatre;
+use NumaxLab\Icaa\Records\Earnings\Film;
+use NumaxLab\Icaa\Records\Earnings\Session;
+use NumaxLab\Icaa\Records\Earnings\SessionFilm;
+use NumaxLab\Icaa\Records\Earnings\SessionScheduling;
 
 class Dumper implements DumperInterface
 {
@@ -36,7 +36,7 @@ class Dumper implements DumperInterface
     /**
      * @return string
      */
-    public function dump()
+    public function dump(): string
     {
         $dump = $this->file->box()->toLine().$this->endOfLine;
         /** @var CinemaTheatre $cinemaTheatre */

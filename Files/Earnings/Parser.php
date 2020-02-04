@@ -52,7 +52,7 @@ class Parser implements ParserInterface
      * @return EarningsFile
      * @throws ParserException
      */
-    public function parse($input)
+    public function parse(string $input)
     {
         $lines = explode($this->endOfLine, $input);
 

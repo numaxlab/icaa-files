@@ -8,5 +8,5 @@ interface ParserInterface
      * @param string $input
      * @return mixed
      */
-    public function parse($input);
+    public function parse(string $input);
 }

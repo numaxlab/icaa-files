@@ -16,7 +16,7 @@ use NumaxLab\Icaa\Records\Earnings\SessionScheduling;
 
 class EarningsFile
 {
-    const EOL = "\r\n";
+    public const EOL = "\r\n";
 
     /**
      * @var Box
@@ -59,12 +59,12 @@ class EarningsFile
     private $encryptKeyFingerprint;
 
     /**
-     * IcaaFile constructor.
+     * EarningsFile constructor.
      * @param null|string $encryptionKeyData
      * @param null|string $encryptKeyFingerprint
      * @throws Exceptions\RecordsCollectionException
      */
-    public function __construct($encryptionKeyData = null, $encryptKeyFingerprint = null)
+    public function __construct(string $encryptionKeyData = null, string $encryptKeyFingerprint = null)
     {
         $this->cinemaTheatres = new Collection();
         $this->sessions = new Collection();
@@ -80,7 +80,7 @@ class EarningsFile
      * @param Box $box
      * @return EarningsFile
      */
-    public function setBox(Box $box)
+    public function setBox(Box $box): EarningsFile
     {
         $this->box = $box;
         return $this;
@@ -90,7 +90,7 @@ class EarningsFile
      * @param CinemaTheatre $cinemaTheatre
      * @return EarningsFile
      */
-    public function addCinemaTheatre(CinemaTheatre $cinemaTheatre)
+    public function addCinemaTheatre(CinemaTheatre $cinemaTheatre): EarningsFile
     {
         $this->cinemaTheatres->push($cinemaTheatre);
         return $this;
@@ -100,7 +100,7 @@ class EarningsFile
      * @param Session $session
      * @return EarningsFile
      */
-    public function addSession(Session $session)
+    public function addSession(Session $session): EarningsFile
     {
         $this->sessions->push($session);
         return $this;
@@ -110,7 +110,7 @@ class EarningsFile
      * @param SessionFilm $sessionFilm
      * @return EarningsFile
      */
-    public function addSessionFilm(SessionFilm $sessionFilm)
+    public function addSessionFilm(SessionFilm $sessionFilm): EarningsFile
     {
         $this->sessionsFilms->push($sessionFilm);
         return $this;
@@ -120,7 +120,7 @@ class EarningsFile
      * @param Film $film
      * @return EarningsFile
      */
-    public function addFilm(Film $film)
+    public function addFilm(Film $film): EarningsFile
     {
         $this->films->push($film);
         return $this;
@@ -130,7 +130,7 @@ class EarningsFile
      * @param SessionScheduling $sessionScheduling
      * @return EarningsFile
      */
-    public function addSessionScheduling(SessionScheduling $sessionScheduling)
+    public function addSessionScheduling(SessionScheduling $sessionScheduling): EarningsFile
     {
         $this->sessionsScheduling->push($sessionScheduling);
         return $this;
@@ -139,7 +139,7 @@ class EarningsFile
     /**
      * @return Box
      */
-    public function box()
+    public function box(): Box
     {
         return $this->box;
     }
@@ -147,7 +147,7 @@ class EarningsFile
     /**
      * @return Collection
      */
-    public function cinemaTheatres()
+    public function cinemaTheatres(): Collection
     {
         return $this->cinemaTheatres;
     }
@@ -155,7 +155,7 @@ class EarningsFile
     /**
      * @return Collection
      */
-    public function sessions()
+    public function sessions(): Collection
     {
         return $this->sessions;
     }
@@ -163,7 +163,7 @@ class EarningsFile
     /**
      * @return Collection
      */
-    public function sessionsFilms()
+    public function sessionsFilms(): Collection
     {
         return $this->sessionsFilms;
     }
@@ -171,7 +171,7 @@ class EarningsFile
     /**
      * @return Collection
      */
-    public function films()
+    public function films(): Collection
     {
         return $this->films;
     }
@@ -179,19 +179,19 @@ class EarningsFile
     /**
      * @return Collection
      */
-    public function sessionsScheduling()
+    public function sessionsScheduling(): Collection
     {
         return $this->sessionsScheduling;
     }
 
     /**
-     * @param $input
+     * @param string $input
      * @param string $eol
      * @return EarningsFile
      * @throws Exceptions\ParserException
      * @throws Exceptions\RecordsCollectionException
      */
-    public static function parse($input, $eol = self::EOL)
+    public static function parse(string $input, string $eol = self::EOL): EarningsFile
     {
         $parser = new Parser($eol, new self());
 
@@ -203,7 +203,7 @@ class EarningsFile
      * @return string
      * @throws \Assert\AssertionFailedException
      */
-    public function dump($eol = self::EOL)
+    public function dump(string $eol = self::EOL): string
     {
         $this->assertProperties();
 
@@ -218,7 +218,7 @@ class EarningsFile
      * @param string $input
      * @return string
      */
-    public function encrypt($input)
+    public function encrypt(string $input): string
     {
         $encrypter = new Encrypter($this->encryptionKeyData, $this->encryptKeyFingerprint);
 
@@ -229,9 +229,9 @@ class EarningsFile
      * @throws InvalidArgumentException
      * @throws \Assert\AssertionFailedException
      */
-    private function assertProperties()
+    private function assertProperties(): void
     {
-        Assertion::notEmpty($this->box());
+        Assertion::notEmpty($this->box);
         Assertion::greaterThan($this->cinemaTheatres()->count(), 0);
         Assertion::greaterThan($this->sessions()->count(), 0);
         Assertion::greaterThan($this->sessionsFilms()->count(), 0);
@@ -242,7 +242,7 @@ class EarningsFile
     /**
      *
      */
-    private function updateBoxWithFinalCounts()
+    private function updateBoxWithFinalCounts(): void
     {
         $fileLinesQty = 1 + $this->cinemaTheatres()->count() +
             $this->sessions()->count() + $this->sessionsFilms()->count() +

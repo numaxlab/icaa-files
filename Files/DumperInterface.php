@@ -7,5 +7,5 @@ interface DumperInterface
     /**
      * @return string
      */
-    public function dump();
+    public function dump(): string;
 }

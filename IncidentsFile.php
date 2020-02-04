@@ -10,7 +10,7 @@ use NumaxLab\Icaa\Records\Incidents\TheatreIncidents;
 
 class IncidentsFile
 {
-    const EOL = "\r\n";
+    public const EOL = "\r\n";
 
     /**
      * @var Header
@@ -35,7 +35,7 @@ class IncidentsFile
      * @param Header $header
      * @return $this
      */
-    public function setHeader(Header $header)
+    public function setHeader(Header $header): self
     {
         $this->header = $header;
 
@@ -46,7 +46,7 @@ class IncidentsFile
      * @param TheatreIncidents $theatreIncidents
      * @return $this
      */
-    public function addTheatreIncidents(TheatreIncidents $theatreIncidents)
+    public function addTheatreIncidents(TheatreIncidents $theatreIncidents): self
     {
         $this->theatresIncidents->push($theatreIncidents);
 
@@ -56,7 +56,7 @@ class IncidentsFile
     /**
      * @return Header
      */
-    public function header()
+    public function header(): Header
     {
         return $this->header;
     }
@@ -64,7 +64,7 @@ class IncidentsFile
     /**
      * @return Collection
      */
-    public function theatresIncidents()
+    public function theatresIncidents(): Collection
     {
         return $this->theatresIncidents;
     }
@@ -73,7 +73,7 @@ class IncidentsFile
      * @param string $input
      * @param string $eol
      */
-    public static function parse($input, $eol = self::EOL)
+    public static function parse(string $input, string $eol = self::EOL): void
     {
         //
     }
@@ -83,7 +83,7 @@ class IncidentsFile
      * @return string
      * @throws \Assert\AssertionFailedException
      */
-    public function dump($eol = self::EOL)
+    public function dump(string $eol = self::EOL): string
     {
         $this->assertProperties();
 
@@ -95,9 +95,9 @@ class IncidentsFile
     /**
      * @throws \Assert\AssertionFailedException
      */
-    private function assertProperties()
+    private function assertProperties(): void
     {
-        Assertion::notEmpty($this->header());
+        Assertion::notEmpty($this->header);
         Assertion::greaterThan($this->theatresIncidents()->count(), 0);
     }
 }
