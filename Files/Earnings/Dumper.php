@@ -1,14 +1,16 @@
 <?php
 
-namespace NumaxLab\Icaa;
+namespace NumaxLab\Icaa\Files\Earnings;
 
+use NumaxLab\Icaa\Files\DumperInterface;
+use NumaxLab\Icaa\EarningsFile;
 use NumaxLab\Icaa\Records\CinemaTheatre;
 use NumaxLab\Icaa\Records\Film;
 use NumaxLab\Icaa\Records\Session;
 use NumaxLab\Icaa\Records\SessionFilm;
 use NumaxLab\Icaa\Records\SessionScheduling;
 
-class Dumper
+class Dumper implements DumperInterface
 {
     /**
      * @var string
@@ -16,16 +18,16 @@ class Dumper
     private $endOfLine;
 
     /**
-     * @var IcaaFile
+     * @var EarningsFile
      */
     private $file;
 
     /**
      * Dumper constructor.
      * @param string $eol
-     * @param IcaaFile $file
+     * @param EarningsFile $file
      */
-    public function __construct($eol, IcaaFile $file)
+    public function __construct($eol, EarningsFile $file)
     {
         $this->endOfLine = $eol;
         $this->file = $file;

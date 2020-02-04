@@ -11,4 +11,4 @@ before_script:
 script: phpunit --coverage-text
 
 notifications:
-  email: "adrian.blunier@gmail.com"
+  email: "adrian@numax.org"

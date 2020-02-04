@@ -4,6 +4,8 @@ namespace NumaxLab\Icaa;
 
 use Assert\Assertion;
 use InvalidArgumentException;
+use NumaxLab\Icaa\Files\Earnings\Dumper;
+use NumaxLab\Icaa\Files\Earnings\Parser;
 use NumaxLab\Icaa\Records\Box;
 use NumaxLab\Icaa\Records\CinemaTheatre;
 use NumaxLab\Icaa\Records\Collection;
@@ -12,7 +14,7 @@ use NumaxLab\Icaa\Records\Session;
 use NumaxLab\Icaa\Records\SessionFilm;
 use NumaxLab\Icaa\Records\SessionScheduling;
 
-class IcaaFile
+class EarningsFile
 {
     const EOL = "\r\n";
 
@@ -76,7 +78,7 @@ class IcaaFile
 
     /**
      * @param Box $box
-     * @return IcaaFile
+     * @return EarningsFile
      */
     public function setBox(Box $box)
     {
@@ -86,7 +88,7 @@ class IcaaFile
 
     /**
      * @param CinemaTheatre $cinemaTheatre
-     * @return IcaaFile
+     * @return EarningsFile
      */
     public function addCinemaTheatre(CinemaTheatre $cinemaTheatre)
     {
@@ -96,7 +98,7 @@ class IcaaFile
 
     /**
      * @param Session $session
-     * @return IcaaFile
+     * @return EarningsFile
      */
     public function addSession(Session $session)
     {
@@ -106,7 +108,7 @@ class IcaaFile
 
     /**
      * @param SessionFilm $sessionFilm
-     * @return IcaaFile
+     * @return EarningsFile
      */
     public function addSessionFilm(SessionFilm $sessionFilm)
     {
@@ -116,7 +118,7 @@ class IcaaFile
 
     /**
      * @param Film $film
-     * @return IcaaFile
+     * @return EarningsFile
      */
     public function addFilm(Film $film)
     {
@@ -126,7 +128,7 @@ class IcaaFile
 
     /**
      * @param SessionScheduling $sessionScheduling
-     * @return IcaaFile
+     * @return EarningsFile
      */
     public function addSessionScheduling(SessionScheduling $sessionScheduling)
     {
@@ -185,7 +187,7 @@ class IcaaFile
     /**
      * @param $input
      * @param string $eol
-     * @return IcaaFile
+     * @return EarningsFile
      * @throws Exceptions\ParserException
      * @throws Exceptions\RecordsCollectionException
      */
