@@ -1,9 +1,10 @@
 <?php
 
-namespace NumaxLab\Icaa\Records;
+namespace NumaxLab\Icaa\Records\Earnings;
 
 use Assert\Assert;
 use Carbon\Carbon;
+use NumaxLab\Icaa\Records\RecordInterface;
 use Stringy\Stringy;
 
 class Session implements RecordInterface

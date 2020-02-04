@@ -5,12 +5,12 @@ namespace NumaxLab\Icaa\Files\Earnings;
 use NumaxLab\Icaa\Exceptions\ParserException;
 use NumaxLab\Icaa\Files\ParserInterface;
 use NumaxLab\Icaa\EarningsFile;
-use NumaxLab\Icaa\Records\Box;
-use NumaxLab\Icaa\Records\CinemaTheatre;
-use NumaxLab\Icaa\Records\Film;
-use NumaxLab\Icaa\Records\Session;
-use NumaxLab\Icaa\Records\SessionFilm;
-use NumaxLab\Icaa\Records\SessionScheduling;
+use NumaxLab\Icaa\Records\Earnings\Box;
+use NumaxLab\Icaa\Records\Earnings\CinemaTheatre;
+use NumaxLab\Icaa\Records\Earnings\Film;
+use NumaxLab\Icaa\Records\Earnings\Session;
+use NumaxLab\Icaa\Records\Earnings\SessionFilm;
+use NumaxLab\Icaa\Records\Earnings\SessionScheduling;
 
 class Parser implements ParserInterface
 {

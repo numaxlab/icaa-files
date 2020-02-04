@@ -5,13 +5,13 @@ namespace NumaxLab\Icaa\Tests\Files\Earnings;
 use Mockery;
 use NumaxLab\Icaa\EarningsFile;
 use NumaxLab\Icaa\Files\Earnings\Dumper;
-use NumaxLab\Icaa\Records\Box;
-use NumaxLab\Icaa\Records\CinemaTheatre;
+use NumaxLab\Icaa\Records\Earnings\Box;
+use NumaxLab\Icaa\Records\Earnings\CinemaTheatre;
 use NumaxLab\Icaa\Records\Collection;
-use NumaxLab\Icaa\Records\Film;
-use NumaxLab\Icaa\Records\Session;
-use NumaxLab\Icaa\Records\SessionFilm;
-use NumaxLab\Icaa\Records\SessionScheduling;
+use NumaxLab\Icaa\Records\Earnings\Film;
+use NumaxLab\Icaa\Records\Earnings\Session;
+use NumaxLab\Icaa\Records\Earnings\SessionFilm;
+use NumaxLab\Icaa\Records\Earnings\SessionScheduling;
 use PHPUnit\Framework\TestCase;
 
 class DumperTest extends TestCase

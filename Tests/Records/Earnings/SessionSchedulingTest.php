@@ -1,10 +1,10 @@
 <?php
 
-namespace NumaxLab\Icaa\Tests\Records;
+namespace NumaxLab\Icaa\Tests\Records\Earnings;
 
 use Carbon\Carbon;
+use NumaxLab\Icaa\Records\Earnings\SessionScheduling;
 use NumaxLab\Icaa\Records\RecordInterface;
-use NumaxLab\Icaa\Records\SessionScheduling;
 use PHPUnit\Framework\TestCase;
 use Stringy\Stringy;
 
