@@ -8,14 +8,14 @@ Este paquete es instalable y autocargable a través de Composer:
 
 ```$ composer require numaxlab/icaa-files```
 
-## Uso
+## Uso del fichero de recaudación
 
 ### Lectura
 
 ```php
-use NumaxLab\Icaa\IcaaFile;
+use NumaxLab\Icaa\EarningsFile;
 
-$icaaFile = IcaaFile::parse($fileContent);
+$icaaFile = EarningsFile::parse($fileContent);
 
 $box = $icaaFile->getBox();
 //...
@@ -24,9 +24,9 @@ $box = $icaaFile->getBox();
 ### Escritura
 
 ```php
-use NumaxLab\Icaa\IcaaFile;
+use NumaxLab\Icaa\EarningsFile;
 
-$icaaFile = new IcaaFile();
+$icaaFile = new EarningsFile();
 
 $icaaFile->setBox($box)
     ->addCinemaTheatre($cinemaTheatre)

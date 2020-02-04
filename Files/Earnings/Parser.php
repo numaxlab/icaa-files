@@ -1,16 +1,18 @@
 <?php
 
-namespace NumaxLab\Icaa;
+namespace NumaxLab\Icaa\Files\Earnings;
 
 use NumaxLab\Icaa\Exceptions\ParserException;
-use NumaxLab\Icaa\Records\Box;
-use NumaxLab\Icaa\Records\CinemaTheatre;
-use NumaxLab\Icaa\Records\Film;
-use NumaxLab\Icaa\Records\Session;
-use NumaxLab\Icaa\Records\SessionFilm;
-use NumaxLab\Icaa\Records\SessionScheduling;
+use NumaxLab\Icaa\Files\ParserInterface;
+use NumaxLab\Icaa\EarningsFile;
+use NumaxLab\Icaa\Records\Earnings\Box;
+use NumaxLab\Icaa\Records\Earnings\CinemaTheatre;
+use NumaxLab\Icaa\Records\Earnings\Film;
+use NumaxLab\Icaa\Records\Earnings\Session;
+use NumaxLab\Icaa\Records\Earnings\SessionFilm;
+use NumaxLab\Icaa\Records\Earnings\SessionScheduling;
 
-class Parser
+class Parser implements ParserInterface
 {
     /**
      * @var string
@@ -18,7 +20,7 @@ class Parser
     private $endOfLine;
 
     /**
-     * @var IcaaFile
+     * @var EarningsFile
      */
     private $file;
 
@@ -37,9 +39,9 @@ class Parser
     /**
      * Parser constructor.
      * @param string $eol
-     * @param IcaaFile $file
+     * @param EarningsFile $file
      */
-    public function __construct($eol, IcaaFile $file)
+    public function __construct($eol, EarningsFile $file)
     {
         $this->endOfLine = $eol;
         $this->file = $file;
@@ -47,10 +49,10 @@ class Parser
 
     /**
      * @param $input
-     * @return IcaaFile
+     * @return EarningsFile
      * @throws ParserException
      */
-    public function parse($input)
+    public function parse(string $input)
     {
         $lines = explode($this->endOfLine, $input);
 

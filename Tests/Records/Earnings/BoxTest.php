@@ -1,10 +1,10 @@
 <?php
 
-namespace NumaxLab\Icaa\Tests\Records;
+namespace NumaxLab\Icaa\Tests\Records\Earnings;
 
 use Carbon\Carbon;
 use InvalidArgumentException;
-use NumaxLab\Icaa\Records\Box;
+use NumaxLab\Icaa\Records\Earnings\Box;
 use NumaxLab\Icaa\Records\RecordInterface;
 use PHPUnit\Framework\TestCase;
 use Stringy\Stringy;

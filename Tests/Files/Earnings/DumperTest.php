@@ -1,23 +1,23 @@
 <?php
 
-namespace NumaxLab\Icaa\Tests\Records;
+namespace NumaxLab\Icaa\Tests\Files\Earnings;
 
 use Mockery;
-use NumaxLab\Icaa\Dumper;
-use NumaxLab\Icaa\IcaaFile;
-use NumaxLab\Icaa\Records\Box;
-use NumaxLab\Icaa\Records\CinemaTheatre;
+use NumaxLab\Icaa\EarningsFile;
+use NumaxLab\Icaa\Files\Earnings\Dumper;
+use NumaxLab\Icaa\Records\Earnings\Box;
+use NumaxLab\Icaa\Records\Earnings\CinemaTheatre;
 use NumaxLab\Icaa\Records\Collection;
-use NumaxLab\Icaa\Records\Film;
-use NumaxLab\Icaa\Records\Session;
-use NumaxLab\Icaa\Records\SessionFilm;
-use NumaxLab\Icaa\Records\SessionScheduling;
+use NumaxLab\Icaa\Records\Earnings\Film;
+use NumaxLab\Icaa\Records\Earnings\Session;
+use NumaxLab\Icaa\Records\Earnings\SessionFilm;
+use NumaxLab\Icaa\Records\Earnings\SessionScheduling;
 use PHPUnit\Framework\TestCase;
 
 class DumperTest extends TestCase
 {
     /**
-     * @var \NumaxLab\Icaa\Dumper
+     * @var Dumper
      */
     protected $sut;
 
@@ -30,7 +30,7 @@ class DumperTest extends TestCase
     {
         parent::setUp();
 
-        $this->fileMock = Mockery::mock(IcaaFile::class);
+        $this->fileMock = Mockery::mock(EarningsFile::class);
 
         $this->fileMock->shouldReceive('box')
             ->andReturn(null);
@@ -50,7 +50,7 @@ class DumperTest extends TestCase
         $this->fileMock->shouldReceive('sessionsScheduling')
             ->andReturn(new Collection());
 
-        $this->sut = new Dumper(IcaaFile::EOL, $this->fileMock);
+        $this->sut = new Dumper(EarningsFile::EOL, $this->fileMock);
     }
 
     protected function tearDown()
@@ -66,13 +66,13 @@ class DumperTest extends TestCase
     {
         $this->prepareIcaaFileMock();
 
-        $this->sut = new Dumper(IcaaFile::EOL, $this->fileMock);
+        $this->sut = new Dumper(EarningsFile::EOL, $this->fileMock);
 
-        $dumpResult = 'testbox'.IcaaFile::EOL.
-            'testcinematheatre'.IcaaFile::EOL.
-            'testsession'.IcaaFile::EOL.
-            'testsessionfilm'.IcaaFile::EOL.
-            'testfilm'.IcaaFile::EOL.
+        $dumpResult = 'testbox'.EarningsFile::EOL.
+            'testcinematheatre'.EarningsFile::EOL.
+            'testsession'.EarningsFile::EOL.
+            'testsessionfilm'.EarningsFile::EOL.
+            'testfilm'.EarningsFile::EOL.
             'testsessionscheduling';
 
         $dump = $this->sut->dump();
@@ -113,7 +113,7 @@ class DumperTest extends TestCase
             ->once()
             ->andReturn('testsessionscheduling');
 
-        $this->fileMock = Mockery::mock(IcaaFile::class);
+        $this->fileMock = Mockery::mock(EarningsFile::class);
 
         $this->fileMock->shouldReceive('box')
             ->andReturn($boxDouble);

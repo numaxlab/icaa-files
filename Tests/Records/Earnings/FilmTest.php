@@ -1,8 +1,8 @@
 <?php
 
-namespace NumaxLab\Icaa\Tests\Records;
+namespace NumaxLab\Icaa\Tests\Records\Earnings;
 
-use NumaxLab\Icaa\Records\Film;
+use NumaxLab\Icaa\Records\Earnings\Film;
 use NumaxLab\Icaa\Records\RecordInterface;
 use PHPUnit\Framework\TestCase;
 use Stringy\Stringy;

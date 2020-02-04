@@ -4,17 +4,19 @@ namespace NumaxLab\Icaa;
 
 use Assert\Assertion;
 use InvalidArgumentException;
-use NumaxLab\Icaa\Records\Box;
-use NumaxLab\Icaa\Records\CinemaTheatre;
+use NumaxLab\Icaa\Files\Earnings\Dumper;
+use NumaxLab\Icaa\Files\Earnings\Parser;
+use NumaxLab\Icaa\Records\Earnings\Box;
+use NumaxLab\Icaa\Records\Earnings\CinemaTheatre;
 use NumaxLab\Icaa\Records\Collection;
-use NumaxLab\Icaa\Records\Film;
-use NumaxLab\Icaa\Records\Session;
-use NumaxLab\Icaa\Records\SessionFilm;
-use NumaxLab\Icaa\Records\SessionScheduling;
+use NumaxLab\Icaa\Records\Earnings\Film;
+use NumaxLab\Icaa\Records\Earnings\Session;
+use NumaxLab\Icaa\Records\Earnings\SessionFilm;
+use NumaxLab\Icaa\Records\Earnings\SessionScheduling;
 
-class IcaaFile
+class EarningsFile
 {
-    const EOL = "\r\n";
+    public const EOL = "\r\n";
 
     /**
      * @var Box
@@ -57,12 +59,12 @@ class IcaaFile
     private $encryptKeyFingerprint;
 
     /**
-     * IcaaFile constructor.
+     * EarningsFile constructor.
      * @param null|string $encryptionKeyData
      * @param null|string $encryptKeyFingerprint
      * @throws Exceptions\RecordsCollectionException
      */
-    public function __construct($encryptionKeyData = null, $encryptKeyFingerprint = null)
+    public function __construct(string $encryptionKeyData = null, string $encryptKeyFingerprint = null)
     {
         $this->cinemaTheatres = new Collection();
         $this->sessions = new Collection();
@@ -76,9 +78,9 @@ class IcaaFile
 
     /**
      * @param Box $box
-     * @return IcaaFile
+     * @return EarningsFile
      */
-    public function setBox(Box $box)
+    public function setBox(Box $box): EarningsFile
     {
         $this->box = $box;
         return $this;
@@ -86,9 +88,9 @@ class IcaaFile
 
     /**
      * @param CinemaTheatre $cinemaTheatre
-     * @return IcaaFile
+     * @return EarningsFile
      */
-    public function addCinemaTheatre(CinemaTheatre $cinemaTheatre)
+    public function addCinemaTheatre(CinemaTheatre $cinemaTheatre): EarningsFile
     {
         $this->cinemaTheatres->push($cinemaTheatre);
         return $this;
@@ -96,9 +98,9 @@ class IcaaFile
 
     /**
      * @param Session $session
-     * @return IcaaFile
+     * @return EarningsFile
      */
-    public function addSession(Session $session)
+    public function addSession(Session $session): EarningsFile
     {
         $this->sessions->push($session);
         return $this;
@@ -106,9 +108,9 @@ class IcaaFile
 
     /**
      * @param SessionFilm $sessionFilm
-     * @return IcaaFile
+     * @return EarningsFile
      */
-    public function addSessionFilm(SessionFilm $sessionFilm)
+    public function addSessionFilm(SessionFilm $sessionFilm): EarningsFile
     {
         $this->sessionsFilms->push($sessionFilm);
         return $this;
@@ -116,9 +118,9 @@ class IcaaFile
 
     /**
      * @param Film $film
-     * @return IcaaFile
+     * @return EarningsFile
      */
-    public function addFilm(Film $film)
+    public function addFilm(Film $film): EarningsFile
     {
         $this->films->push($film);
         return $this;
@@ -126,9 +128,9 @@ class IcaaFile
 
     /**
      * @param SessionScheduling $sessionScheduling
-     * @return IcaaFile
+     * @return EarningsFile
      */
-    public function addSessionScheduling(SessionScheduling $sessionScheduling)
+    public function addSessionScheduling(SessionScheduling $sessionScheduling): EarningsFile
     {
         $this->sessionsScheduling->push($sessionScheduling);
         return $this;
@@ -137,7 +139,7 @@ class IcaaFile
     /**
      * @return Box
      */
-    public function box()
+    public function box(): Box
     {
         return $this->box;
     }
@@ -145,7 +147,7 @@ class IcaaFile
     /**
      * @return Collection
      */
-    public function cinemaTheatres()
+    public function cinemaTheatres(): Collection
     {
         return $this->cinemaTheatres;
     }
@@ -153,7 +155,7 @@ class IcaaFile
     /**
      * @return Collection
      */
-    public function sessions()
+    public function sessions(): Collection
     {
         return $this->sessions;
     }
@@ -161,7 +163,7 @@ class IcaaFile
     /**
      * @return Collection
      */
-    public function sessionsFilms()
+    public function sessionsFilms(): Collection
     {
         return $this->sessionsFilms;
     }
@@ -169,7 +171,7 @@ class IcaaFile
     /**
      * @return Collection
      */
-    public function films()
+    public function films(): Collection
     {
         return $this->films;
     }
@@ -177,19 +179,19 @@ class IcaaFile
     /**
      * @return Collection
      */
-    public function sessionsScheduling()
+    public function sessionsScheduling(): Collection
     {
         return $this->sessionsScheduling;
     }
 
     /**
-     * @param $input
+     * @param string $input
      * @param string $eol
-     * @return IcaaFile
+     * @return EarningsFile
      * @throws Exceptions\ParserException
      * @throws Exceptions\RecordsCollectionException
      */
-    public static function parse($input, $eol = self::EOL)
+    public static function parse(string $input, string $eol = self::EOL): EarningsFile
     {
         $parser = new Parser($eol, new self());
 
@@ -201,7 +203,7 @@ class IcaaFile
      * @return string
      * @throws \Assert\AssertionFailedException
      */
-    public function dump($eol = self::EOL)
+    public function dump(string $eol = self::EOL): string
     {
         $this->assertProperties();
 
@@ -216,7 +218,7 @@ class IcaaFile
      * @param string $input
      * @return string
      */
-    public function encrypt($input)
+    public function encrypt(string $input): string
     {
         $encrypter = new Encrypter($this->encryptionKeyData, $this->encryptKeyFingerprint);
 
@@ -227,9 +229,9 @@ class IcaaFile
      * @throws InvalidArgumentException
      * @throws \Assert\AssertionFailedException
      */
-    private function assertProperties()
+    private function assertProperties(): void
     {
-        Assertion::notEmpty($this->box());
+        Assertion::notEmpty($this->box);
         Assertion::greaterThan($this->cinemaTheatres()->count(), 0);
         Assertion::greaterThan($this->sessions()->count(), 0);
         Assertion::greaterThan($this->sessionsFilms()->count(), 0);
@@ -240,7 +242,7 @@ class IcaaFile
     /**
      *
      */
-    private function updateBoxWithFinalCounts()
+    private function updateBoxWithFinalCounts(): void
     {
         $fileLinesQty = 1 + $this->cinemaTheatres()->count() +
             $this->sessions()->count() + $this->sessionsFilms()->count() +

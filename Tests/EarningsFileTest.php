@@ -4,22 +4,22 @@ namespace NumaxLab\Icaa\Tests;
 
 use Carbon\Carbon;
 use InvalidArgumentException;
-use NumaxLab\Icaa\IcaaFile;
-use NumaxLab\Icaa\Records\Box;
-use NumaxLab\Icaa\Records\CinemaTheatre;
-use NumaxLab\Icaa\Records\Film;
-use NumaxLab\Icaa\Records\Session;
-use NumaxLab\Icaa\Records\SessionFilm;
-use NumaxLab\Icaa\Records\SessionScheduling;
+use NumaxLab\Icaa\EarningsFile;
+use NumaxLab\Icaa\Records\Earnings\Box;
+use NumaxLab\Icaa\Records\Earnings\CinemaTheatre;
+use NumaxLab\Icaa\Records\Earnings\Film;
+use NumaxLab\Icaa\Records\Earnings\Session;
+use NumaxLab\Icaa\Records\Earnings\SessionFilm;
+use NumaxLab\Icaa\Records\Earnings\SessionScheduling;
 use PHPUnit\Framework\TestCase;
 
-class IcaaFileTest extends TestCase
+class EarningsFileTest extends TestCase
 {
     public function testDumpsFile()
     {
-        $icaaFile = $this->setupIcaaFile();
+        $earningsFile = $this->setupEarningsFile();
 
-        $dump = $icaaFile->dump();
+        $dump = $earningsFile->dump();
 
         $this->assertInternalType('string', $dump);
     }
@@ -28,18 +28,18 @@ class IcaaFileTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $icaaFile = new IcaaFile();
+        $earningsFile = new EarningsFile();
 
-        $icaaFile->dump();
+        $earningsFile->dump();
     }
 
     public function testUpdatesBox()
     {
-        $icaaFile = $this->setupIcaaFile();
+        $earningsFile = $this->setupEarningsFile();
 
-        $icaaFile->dump();
+        $earningsFile->dump();
 
-        $box = $icaaFile->box();
+        $box = $earningsFile->box();
 
         $this->assertEquals(6, $box->getFileLinesQty());
         $this->assertEquals(1, $box->getSessionsQty());
@@ -47,23 +47,23 @@ class IcaaFileTest extends TestCase
         $this->assertEquals(22.5, $box->getEarnings());
     }
 
-    private function setupIcaaFile()
+    private function setupEarningsFile()
     {
-        $icaaFile = new IcaaFile();
+        $earningsFile = new EarningsFile();
 
-        $icaaFile->setBox(new Box(
+        $earningsFile->setBox(new Box(
             Box::FILE_TYPE_REGULAR,
             'ABC',
             Carbon::now()->subDays(7),
             Carbon::now()
         ));
 
-        $icaaFile->addCinemaTheatre(new CinemaTheatre(
+        $earningsFile->addCinemaTheatre(new CinemaTheatre(
             '123456',
             'Test cinema theatre'
         ));
 
-        $icaaFile->addSession(new Session(
+        $earningsFile->addSession(new Session(
             '123456',
             Carbon::now()->subDays(2),
             1,
@@ -72,13 +72,13 @@ class IcaaFileTest extends TestCase
             '000'
         ));
 
-        $icaaFile->addSessionFilm(new SessionFilm(
+        $earningsFile->addSessionFilm(new SessionFilm(
             '123456',
             Carbon::now()->subDays(2),
             10
         ));
 
-        $icaaFile->addFilm(new Film(
+        $earningsFile->addFilm(new Film(
             '123456',
             10,
             '12876',
@@ -91,12 +91,12 @@ class IcaaFileTest extends TestCase
             '1'
         ));
 
-        $icaaFile->addSessionScheduling(new SessionScheduling(
+        $earningsFile->addSessionScheduling(new SessionScheduling(
             '123456',
             Carbon::now()->subDays(2),
             1
         ));
 
-        return $icaaFile;
+        return $earningsFile;
     }
 }

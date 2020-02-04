@@ -1,14 +1,15 @@
 <?php
 
-namespace NumaxLab\Icaa\Records;
+namespace NumaxLab\Icaa\Records\Earnings;
 
 use Assert\Assert;
 use Carbon\Carbon;
+use NumaxLab\Icaa\Records\RecordInterface;
 use Stringy\Stringy;
 
-class SessionFilm implements RecordInterface
+class SessionScheduling implements RecordInterface
 {
-    const RECORD_TYPE = 3;
+    const RECORD_TYPE = 5;
 
     /**
      * @var string
@@ -23,19 +24,19 @@ class SessionFilm implements RecordInterface
     /**
      * @var int
      */
-    private $filmId;
+    private $sessionsQty;
 
     /**
-     * SessionFilm constructor.
+     * SessionScheduling constructor.
      * @param string $cinemaTheatreCode
      * @param Carbon $sessionOccurredOn
-     * @param int $filmId
+     * @param int $sessionsQty
      */
-    public function __construct($cinemaTheatreCode, Carbon $sessionOccurredOn, $filmId)
+    public function __construct($cinemaTheatreCode, Carbon $sessionOccurredOn, $sessionsQty)
     {
         $this->setCinemaTheatreCode($cinemaTheatreCode);
         $this->setSessionOccurredOn($sessionOccurredOn);
-        $this->setFilmId($filmId);
+        $this->setSessionsQty($sessionsQty);
     }
 
     /**
@@ -59,15 +60,15 @@ class SessionFilm implements RecordInterface
     }
 
     /**
-     * @param int $filmId
+     * @param int $sessionsQty
      */
-    private function setFilmId($filmId)
+    private function setSessionsQty($sessionsQty)
     {
-        Assert::that($filmId)
+        Assert::that($sessionsQty)
             ->integer()
-            ->greaterThan(0);
+            ->greaterOrEqualThan(0);
 
-        $this->filmId = $filmId;
+        $this->sessionsQty = $sessionsQty;
     }
 
     /**
@@ -89,9 +90,9 @@ class SessionFilm implements RecordInterface
     /**
      * @return int
      */
-    public function getFilmId()
+    public function getSessionsQty()
     {
-        return $this->filmId;
+        return $this->sessionsQty;
     }
 
     /**
@@ -102,25 +103,28 @@ class SessionFilm implements RecordInterface
         $line = (string) self::RECORD_TYPE;
         $line .= Stringy::create($this->getCinemaTheatreCode())->padRight(12, ' ');
         $line .= $this->getSessionOccurredOn()->format('dmy');
-        $line .= $this->getSessionOccurredOn()->format('Hi');
-        $line .= Stringy::create($this->getFilmId())->padLeft(5, '0');
+        $line .= Stringy::create($this->getSessionsQty())->padLeft(2, '0');
 
         return $line;
     }
 
     /**
      * @param string $line
-     * @return SessionFilm
+     * @return SessionScheduling
      */
     public static function fromLine($line)
     {
         $cinemaTheatreCode = (string) Stringy::create($line)->substr(1, 12)->trimRight();
         $sessionOccurredOn = Carbon::createFromFormat(
-            'dmyHi',
-            (string) Stringy::create($line)->substr(13, 10)
+            'dmy',
+            (string) Stringy::create($line)->substr(13, 6)
         );
-        $filmId = (int)(string) Stringy::create($line)->substr(23, 5)->trimLeft('0');
+        $sessionsQty = (int)(string) Stringy::create($line)->substr(19, 2)->trimLeft('0');
 
-        return new self($cinemaTheatreCode, $sessionOccurredOn, $filmId);
+        return new self(
+            $cinemaTheatreCode,
+            $sessionOccurredOn,
+            $sessionsQty
+        );
     }
 }

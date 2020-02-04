@@ -16,7 +16,7 @@ class Encrypter
      * @param string $encryptionKeyData
      * @param string $encryptKeyFingerprint
      */
-    public function __construct($encryptionKeyData, $encryptKeyFingerprint)
+    public function __construct(string $encryptionKeyData, string $encryptKeyFingerprint)
     {
         $gpg = new gnupg();
         $gpg->seterrormode(GNUPG_ERROR_EXCEPTION);
@@ -32,7 +32,7 @@ class Encrypter
      * @param string $input
      * @return string
      */
-    public function encrypt($input)
+    public function encrypt(string $input): string
     {
         return $this->gpg->encrypt($input);
     }
