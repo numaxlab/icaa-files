@@ -233,10 +233,6 @@ class EarningsFile
     {
         Assertion::notEmpty($this->box);
         Assertion::greaterThan($this->cinemaTheatres()->count(), 0);
-        Assertion::greaterThan($this->sessions()->count(), 0);
-        Assertion::greaterThan($this->sessionsFilms()->count(), 0);
-        Assertion::greaterThan($this->films()->count(), 0);
-        Assertion::greaterThan($this->sessionsScheduling()->count(), 0);
     }
 
     /**
