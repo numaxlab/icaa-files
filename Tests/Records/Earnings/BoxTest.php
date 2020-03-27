@@ -34,7 +34,7 @@ class BoxTest extends TestCase
 
         $line = $box->toLine();
 
-        $this->assertInternalType('string', $line);
+        $this->assertIsString($line);
         $this->assertEquals(56, Stringy::create($line)->length());
     }
 

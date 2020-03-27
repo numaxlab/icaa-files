@@ -75,7 +75,7 @@ class Box implements RecordInterface
         $this->setFileLinesQty(0);
         $this->setSessionsQty(0);
         $this->setTicketsQty(0);
-        $this->setEarnings(0.0);
+        $this->setEarnings(0);
     }
 
     /**
@@ -169,7 +169,7 @@ class Box implements RecordInterface
      */
     public function setEarnings($earnings)
     {
-        Assertion::float($earnings);
+        Assertion::numeric($earnings);
 
         $this->earnings = $earnings;
         return $this;
